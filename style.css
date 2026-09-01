@@ -468,6 +468,35 @@ footer:hover .progress-fill {
     }
 }
 
+/* ===== PLAYER OCULTO ===== */
+#player-container {
+    position: fixed;
+    bottom: -9999px;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+}
+
+#player-container iframe {
+    border: none !important;
+    pointer-events: none;
+}
+
+/* Esconder branding do YouTube */
+.yt-load, .ytp-chrome-top, .ytp-chrome-bottom,
+.ytp-gradient-top, .ytp-gradient-bottom,
+.ytp-watermark, .ytp-show-cards-title,
+.ytp-cued-thumbnail-overlay,
+.ytp-title-text, .ytp-watermark,
+.ytp-ce-element, .ytp-paid-content-overlay {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
 /* ===== ANIMAÇÕES ===== */
 @keyframes pulse {
     0% { opacity: 0.6; }

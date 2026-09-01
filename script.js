@@ -3,12 +3,24 @@ let currentVideoId = null;
 let currentTitle = 'Nenhuma';
 let player = null;
 let isPlaying = false;
+let playerReady = false;
 
 // ===== INICIALIZAR PLAYER DO YOUTUBE =====
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
-        height: '0',
-        width: '0',
+        height: '1',
+        width: '1',
+        playerVars: {
+            'autoplay': 0,
+            'controls': 0,
+            'disablekb': 1,
+            'modestbranding': 1,
+            'rel': 0,
+            'showinfo': 0,
+            'iv_load_policy': 3,
+            'fs': 0,
+            'origin': window.location.origin
+        },
         events: {
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange
@@ -17,23 +29,35 @@ function onYouTubeIframeAPIReady() {
 }
 
 function onPlayerReady(event) {
+    playerReady = true;
     console.log('Player pronto!');
 }
 
 function onPlayerStateChange(event) {
     if (event.data === YT.PlayerState.PLAYING) {
         isPlaying = true;
-        document.querySelector('.status-indicator').textContent = '▶️';
-        document.querySelector('.play-btn').textContent = '⏸';
+        updatePlayButton(true);
+        updateProgress();
     } else if (event.data === YT.PlayerState.PAUSED) {
         isPlaying = false;
-        document.querySelector('.status-indicator').textContent = '⏸';
-        document.querySelector('.play-btn').textContent = '▶️';
+        updatePlayButton(false);
     } else if (event.data === YT.PlayerState.ENDED) {
         isPlaying = false;
-        document.querySelector('.status-indicator').textContent = '▶️';
-        document.querySelector('.play-btn').textContent = '▶️';
+        updatePlayButton(false);
         nextMusic();
+    }
+}
+
+function updatePlayButton(playing) {
+    const playBtn = document.getElementById('playBtn');
+    if (playBtn) {
+        playBtn.textContent = playing ? '⏸' : '▶️';
+        playBtn.title = playing ? 'Pausar' : 'Tocar';
+        playBtn.setAttribute('aria-label', playing ? 'Pausar' : 'Tocar');
+    }
+    const indicator = document.querySelector('.status-indicator');
+    if (indicator) {
+        indicator.textContent = playing ? '▶️' : '⏸';
     }
 }
 
@@ -41,85 +65,83 @@ function onPlayerStateChange(event) {
 function playMusic(videoId, title) {
     currentVideoId = videoId;
     currentTitle = title;
-    
-    if (player && player.loadVideoById) {
+
+    if (player && playerReady && player.loadVideoById) {
         player.loadVideoById(videoId);
-        player.playVideo();
         isPlaying = true;
-        document.querySelector('.status-indicator').textContent = '▶️';
-        document.querySelector('.play-btn').textContent = '⏸';
+        updatePlayButton(true);
         document.querySelector('.current-song').textContent = title;
         document.querySelector('.player-info').classList.add('active');
-        updateProgress();
     } else {
-        // Fallback: abrir em nova aba
-        window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+        // Espera o player e tenta novamente
+        const tryPlay = setInterval(() => {
+            if (player && playerReady && player.loadVideoById) {
+                clearInterval(tryPlay);
+                player.loadVideoById(videoId);
+                isPlaying = true;
+                updatePlayButton(true);
+                document.querySelector('.current-song').textContent = title;
+                document.querySelector('.player-info').classList.add('active');
+            }
+        }, 200);
+        // Para de tentar após 5 segundos
+        setTimeout(() => clearInterval(tryPlay), 5000);
     }
 }
 
 function togglePlay() {
-    if (!player || !currentVideoId) {
-        alert('Selecione uma música primeiro!');
+    if (!player || !playerReady || !currentVideoId) {
         return;
     }
-    
+
     if (isPlaying) {
         player.pauseVideo();
-        isPlaying = false;
-        document.querySelector('.status-indicator').textContent = '⏸';
-        document.querySelector('.play-btn').textContent = '▶️';
     } else {
         player.playVideo();
-        isPlaying = true;
-        document.querySelector('.status-indicator').textContent = '▶️';
-        document.querySelector('.play-btn').textContent = '⏸';
     }
 }
 
 function pauseMusic() {
-    if (player && isPlaying) {
+    if (player && playerReady && isPlaying) {
         player.pauseVideo();
-        isPlaying = false;
-        document.querySelector('.status-indicator').textContent = '⏸';
-        document.querySelector('.play-btn').textContent = '▶️';
     }
 }
 
 function nextMusic() {
     const musicItems = document.querySelectorAll('.music-item');
     let currentIndex = -1;
-    
+
     musicItems.forEach((item, index) => {
         if (item.dataset.video === currentVideoId) {
             currentIndex = index;
         }
     });
-    
+
     if (currentIndex !== -1 && currentIndex < musicItems.length - 1) {
         const nextItem = musicItems[currentIndex + 1];
         playMusic(nextItem.dataset.video, nextItem.dataset.title);
-    } else if (currentIndex === musicItems.length - 1) {
-        // Volta para a primeira
+    } else if (currentIndex === musicItems.length - 1 || currentIndex === -1) {
         const firstItem = musicItems[0];
-        playMusic(firstItem.dataset.video, firstItem.dataset.title);
+        if (firstItem) {
+            playMusic(firstItem.dataset.video, firstItem.dataset.title);
+        }
     }
 }
 
 function prevMusic() {
     const musicItems = document.querySelectorAll('.music-item');
     let currentIndex = -1;
-    
+
     musicItems.forEach((item, index) => {
         if (item.dataset.video === currentVideoId) {
             currentIndex = index;
         }
     });
-    
+
     if (currentIndex > 0) {
         const prevItem = musicItems[currentIndex - 1];
         playMusic(prevItem.dataset.video, prevItem.dataset.title);
     } else if (currentIndex === 0) {
-        // Vai para a última
         const lastItem = musicItems[musicItems.length - 1];
         playMusic(lastItem.dataset.video, lastItem.dataset.title);
     }
@@ -127,10 +149,10 @@ function prevMusic() {
 
 // ===== BARRA DE PROGRESSO =====
 function updateProgress() {
-    if (player && player.getCurrentTime) {
+    if (player && playerReady && player.getCurrentTime && player.getDuration) {
         const duration = player.getDuration();
         const currentTime = player.getCurrentTime();
-        
+
         if (duration > 0) {
             const progress = (currentTime / duration) * 100;
             document.querySelector('.progress-fill').style.width = progress + '%';
@@ -140,10 +162,10 @@ function updateProgress() {
 }
 
 // ===== EVENTOS =====
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Botões de play nos cards
     document.querySelectorAll('.play-music').forEach(btn => {
-        btn.addEventListener('click', function(e) {
+        btn.addEventListener('click', function (e) {
             e.stopPropagation();
             const item = this.closest('.music-item');
             const videoId = item.dataset.video;
@@ -151,35 +173,35 @@ document.addEventListener('DOMContentLoaded', function() {
             playMusic(videoId, title);
         });
     });
-    
-    // Botões do player
+
+    // Botão único de play/pause
     document.getElementById('playBtn').addEventListener('click', togglePlay);
-    document.getElementById('pauseBtn').addEventListener('click', pauseMusic);
+
+    // Botões next/prev
     document.getElementById('nextBtn').addEventListener('click', nextMusic);
     document.getElementById('prevBtn').addEventListener('click', prevMusic);
-    
-    // Clique nos cards (abrir playlist)
+
+    // Clique nos cards (tocar primeira música)
     document.querySelectorAll('.playlist-card').forEach(card => {
-        card.addEventListener('click', function(e) {
-            // Não disparar se clicou em um botão
+        card.addEventListener('click', function (e) {
             if (e.target.tagName === 'BUTTON') return;
-            
+
             const firstMusic = this.querySelector('.music-item');
             if (firstMusic) {
                 playMusic(firstMusic.dataset.video, firstMusic.dataset.title);
             }
         });
     });
-    
-    // Controle de volume (simulado)
-    document.querySelector('.volume-bar').addEventListener('click', function(e) {
+
+    // Controle de volume
+    document.querySelector('.volume-bar').addEventListener('click', function (e) {
         const rect = this.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const width = rect.width;
         const percent = Math.min(100, Math.max(0, (x / width) * 100));
         this.querySelector('.volume-progress').style.width = percent + '%';
-        
-        if (player && player.setVolume) {
+
+        if (player && playerReady && player.setVolume) {
             player.setVolume(percent);
         }
     });
@@ -191,4 +213,4 @@ tag.src = 'https://www.youtube.com/iframe_api';
 const firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-console.log('🎵 Pobrefy carregado! Clique em uma música para tocar.');
+console.log('Pobrefy carregado!');
