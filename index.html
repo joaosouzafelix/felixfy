@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pobrefy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- ===== BARRA LATERAL ===== -->
+        <aside>
+            <div class="logo">Pobrefy</div>
+            
+            <nav>
+                <ul>
+                    <li>🏠 Início</li>
+                    <li>🔍 Buscar</li>
+                    <li>📚 Sua Biblioteca</li>
+                </ul>
+            </nav>
+            
+            <div class="playlist-section">
+                <h3>Playlists</h3>
+                <ul>
+                    <li>🎵 Minhas Músicas</li>
+                    <li>❤️ Favoritas</li>
+                    <li>💪 Treino</li>
+                    <li>🎸 Rock</li>
+                    <li>🎧 Eletrônica</li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- ===== CONTEÚDO PRINCIPAL ===== -->
+        <main>
+            <header>
+                <h1 class="greeting">Boa tarde</h1>
+            </header>
+            
+            <section>
+                <h2 class="section-title">Playlists populares</h2>
+                
+                <div class="playlist-grid">
+                    <div class="playlist-card">
+                        <span class="card-icon">🎶</span>
+                        <h3>Top Brasil</h3>
+                        <p>As músicas mais ouvidas</p>
+                    </div>
+                    
+                    <div class="playlist-card">
+                        <span class="card-icon">🎤</span>
+                        <h3>Pop Hits</h3>
+                        <p>Sucessos do momento</p>
+                    </div>
+                    
+                    <div class="playlist-card">
+                        <span class="card-icon">🎸</span>
+                        <h3>Rock Clássico</h3>
+                        <p>Os maiores hits do rock</p>
+                    </div>
+                    
+                    <div class="playlist-card">
+                        <span class="card-icon">🎧</span>
+                        <h3>Eletrônica</h3>
+                        <p>As melhores batidas</p>
+                    </div>
+
+                    <div class="playlist-card">
+                        <span class="card-icon">🎷</span>
+                        <h3>Jazz & Blues</h3>
+                        <p>Música para relaxar</p>
+                    </div>
+
+                    <div class="playlist-card">
+                        <span class="card-icon">🎹</span>
+                        <h3>MPB</h3>
+                        <p>Música popular brasileira</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ===== PLAYER / RODAPÉ ===== -->
+    <footer>
+        <div class="player-info">
+            <span class="status-indicator">▶️</span>
+            Música atual: <span class="current-song">Nenhuma</span>
+        </div>
+        
+        <div class="player-controls">
+            <button class="control-btn" aria-label="Anterior" title="Anterior">⏮</button>
+            <button class="control-btn play-btn" aria-label="Play" title="Play">▶️</button>
+            <button class="control-btn" aria-label="Pausar" title="Pausar">⏸</button>
+            <button class="control-btn" aria-label="Próxima" title="Próxima">⏭</button>
+        </div>
+
+        <div class="player-volume">
+            <span>🔊</span>
+            <div class="volume-bar">
+                <div class="volume-progress" style="width: 70%"></div>
+            </div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 30%"></div>
+        </div>
+    </footer>
+
+</body>
+</html>
