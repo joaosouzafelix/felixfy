@@ -1,53 +1,5 @@
 // ============================================================
-// ===== CARREGAMENTO DA API DO YOUTUBE =====
-// ============================================================
-function onYouTubeIframeAPIReady() {
-    console.log('🎵 YouTube API carregada!');
-    
-    if (!state.player) {
-        state.player = new YT.Player('player', {
-            height: '1',
-            width: '1',
-            playerVars: {
-                'autoplay': 0,
-                'controls': 0,
-                'disablekb': 1,
-                'modestbranding': 1,
-                'rel': 0,
-                'showinfo': 0,
-                'iv_load_policy': 3,
-                'fs': 0
-            },
-            events: {
-                'onReady': onPlayerReady,
-                'onStateChange': onPlayerStateChange,
-                'onError': onPlayerError
-            }
-        });
-    }
-}
-
-function loadYouTubeAPI() {
-    if (typeof YT !== 'undefined' && YT.Player) {
-        onYouTubeIframeAPIReady();
-        return;
-    }
-    
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    
-    setTimeout(() => {
-        if (!state.playerReady && typeof YT === 'undefined') {
-            console.warn('⚠️ YouTube API não carregou, tentando novamente...');
-            loadYouTubeAPI();
-        }
-    }, 10000);
-}
-
-// ============================================================
-// ===== DADOS DAS MÚSICAS =====
+// ===== DADOS DAS MÚSICAS (COM VÍDEOS REAIS DO YOUTUBE) =====
 // ============================================================
 const MUSIC_DATA = {
     'ana-castela': [
@@ -81,28 +33,28 @@ const DEFAULT_PLAYLISTS = {
         name: 'Ana Castela',
         description: 'Todas as músicas da Ana Castela',
         cover: '🎤',
-        songs: MUSIC_DATA['ana-castela'].map(s => s.id)
+        songs: MUSIC_DATA['ana-castela'].map(function(s) { return s.id; })
     },
     'sertanejo': {
         id: 'sertanejo',
         name: 'Sertanejo',
         description: 'O melhor do sertanejo',
         cover: '🎸',
-        songs: MUSIC_DATA['sertanejo'].map(s => s.id)
+        songs: MUSIC_DATA['sertanejo'].map(function(s) { return s.id; })
     },
     'funk': {
         id: 'funk',
         name: 'Funk',
         description: 'Os melhores funks',
         cover: '🎧',
-        songs: MUSIC_DATA['funk'].map(s => s.id)
+        songs: MUSIC_DATA['funk'].map(function(s) { return s.id; })
     }
 };
 
 // ============================================================
 // ===== ESTADO DA APLICAÇÃO =====
 // ============================================================
-let state = {
+var state = {
     currentUser: null,
     currentPlaylist: null,
     currentSongIndex: 0,
@@ -115,38 +67,16 @@ let state = {
 };
 
 // ============================================================
-// ===== INICIALIZAÇÃO =====
-// ============================================================
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🎵 Inicializando Pobrefy...');
-    
-    loadFromStorage();
-    
-    if (state.currentUser) {
-        showApp();
-        updateGreeting();
-        renderHome();
-        renderLibrary();
-        renderSidebar();
-    } else {
-        showLogin();
-    }
-    
-    setupEvents();
-    loadYouTubeAPI();
-});
-
-// ============================================================
 // ===== LOCAL STORAGE =====
 // ============================================================
 function loadFromStorage() {
     try {
-        const savedUser = localStorage.getItem('pobrefy_user');
+        var savedUser = localStorage.getItem('pobrefy_user');
         if (savedUser) {
             state.currentUser = JSON.parse(savedUser);
         }
         
-        const savedPlaylists = localStorage.getItem('pobrefy_playlists');
+        var savedPlaylists = localStorage.getItem('pobrefy_playlists');
         if (savedPlaylists) {
             state.playlists = JSON.parse(savedPlaylists);
         } else {
@@ -170,6 +100,30 @@ function saveToStorage() {
 }
 
 // ============================================================
+// ===== FUNÇÕES DE MÚSICA =====
+// ============================================================
+function getSongById(id) {
+    for (var playlist in MUSIC_DATA) {
+        for (var i = 0; i < MUSIC_DATA[playlist].length; i++) {
+            if (MUSIC_DATA[playlist][i].id === id) {
+                return MUSIC_DATA[playlist][i];
+            }
+        }
+    }
+    return null;
+}
+
+function getAllSongs() {
+    var all = [];
+    for (var playlist in MUSIC_DATA) {
+        for (var i = 0; i < MUSIC_DATA[playlist].length; i++) {
+            all.push(MUSIC_DATA[playlist][i]);
+        }
+    }
+    return all;
+}
+
+// ============================================================
 // ===== LOGIN / CADASTRO =====
 // ============================================================
 function showLogin() {
@@ -180,7 +134,7 @@ function showLogin() {
 function showApp() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
-    document.getElementById('userNameDisplay').textContent = state.currentUser?.name || 'Usuário';
+    document.getElementById('userNameDisplay').textContent = state.currentUser ? state.currentUser.name : 'Usuário';
 }
 
 function setupLoginEvents() {
@@ -198,11 +152,17 @@ function setupLoginEvents() {
 
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
+        var email = document.getElementById('loginEmail').value;
+        var password = document.getElementById('loginPassword').value;
         
-        const users = JSON.parse(localStorage.getItem('pobrefy_users') || '[]');
-        const user = users.find(function(u) { return u.email === email && u.password === password; });
+        var users = JSON.parse(localStorage.getItem('pobrefy_users') || '[]');
+        var user = null;
+        for (var i = 0; i < users.length; i++) {
+            if (users[i].email === email && users[i].password === password) {
+                user = users[i];
+                break;
+            }
+        }
         
         if (user) {
             state.currentUser = { name: user.name, email: user.email };
@@ -219,19 +179,27 @@ function setupLoginEvents() {
 
     document.getElementById('registerForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const name = document.getElementById('registerName').value;
-        const email = document.getElementById('registerEmail').value;
-        const password = document.getElementById('registerPassword').value;
-        const confirm = document.getElementById('registerConfirmPassword').value;
+        var name = document.getElementById('registerName').value;
+        var email = document.getElementById('registerEmail').value;
+        var password = document.getElementById('registerPassword').value;
+        var confirm = document.getElementById('registerConfirmPassword').value;
         
         if (password !== confirm) {
             alert('As senhas não coincidem!');
             return;
         }
         
-        const users = JSON.parse(localStorage.getItem('pobrefy_users') || '[]');
+        var users = JSON.parse(localStorage.getItem('pobrefy_users') || '[]');
         
-        if (users.find(function(u) { return u.email === email; })) {
+        var exists = false;
+        for (var i = 0; i < users.length; i++) {
+            if (users[i].email === email) {
+                exists = true;
+                break;
+            }
+        }
+        
+        if (exists) {
             alert('Este e-mail já está cadastrado!');
             return;
         }
@@ -265,8 +233,8 @@ function setupLoginEvents() {
 // ===== SAUDAÇÃO =====
 // ============================================================
 function updateGreeting() {
-    const hour = new Date().getHours();
-    let greeting = '';
+    var hour = new Date().getHours();
+    var greeting = '';
     
     if (hour >= 5 && hour < 12) {
         greeting = 'Bom dia';
@@ -276,8 +244,8 @@ function updateGreeting() {
         greeting = 'Boa noite';
     }
     
-    const name = state.currentUser?.name || '';
-    const message = document.getElementById('greetingMessage');
+    var name = state.currentUser ? state.currentUser.name : '';
+    var message = document.getElementById('greetingMessage');
     message.textContent = name ? greeting + ', ' + name + '!' : greeting + '!';
 }
 
@@ -285,36 +253,43 @@ function updateGreeting() {
 // ===== NAVEGAÇÃO =====
 // ============================================================
 function setupNavigation() {
-    document.querySelectorAll('nav ul li').forEach(function(item) {
-        item.addEventListener('click', function() {
-            const page = this.dataset.page;
+    var navItems = document.querySelectorAll('nav ul li');
+    for (var i = 0; i < navItems.length; i++) {
+        navItems[i].addEventListener('click', function() {
+            var page = this.dataset.page;
             
-            document.querySelectorAll('nav ul li').forEach(function(li) {
-                li.classList.remove('active');
-            });
+            var allNav = document.querySelectorAll('nav ul li');
+            for (var j = 0; j < allNav.length; j++) {
+                allNav[j].classList.remove('active');
+            }
             this.classList.add('active');
             
-            document.querySelectorAll('.page-content').forEach(function(p) {
-                p.classList.remove('active');
-            });
-            const target = document.getElementById('page-' + page);
+            var allPages = document.querySelectorAll('.page-content');
+            for (var k = 0; k < allPages.length; k++) {
+                allPages[k].classList.remove('active');
+            }
+            var target = document.getElementById('page-' + page);
             if (target) target.classList.add('active');
         });
-    });
+    }
     
-    document.querySelectorAll('#sidebarPlaylists li[data-playlist]').forEach(function(item) {
-        item.addEventListener('click', function() {
-            const playlistId = this.dataset.playlist;
+    var sidebarItems = document.querySelectorAll('#sidebarPlaylists li[data-playlist]');
+    for (var l = 0; l < sidebarItems.length; l++) {
+        sidebarItems[l].addEventListener('click', function() {
+            var playlistId = this.dataset.playlist;
             openPlaylist(playlistId);
         });
-    });
+    }
     
-    document.querySelector('.create-playlist-btn').addEventListener('click', function() {
-        const name = prompt('Nome da nova playlist:');
-        if (name && name.trim()) {
-            createPlaylist(name.trim());
-        }
-    });
+    var createBtn = document.querySelector('.create-playlist-btn');
+    if (createBtn) {
+        createBtn.addEventListener('click', function() {
+            var name = prompt('Nome da nova playlist:');
+            if (name && name.trim()) {
+                createPlaylist(name.trim());
+            }
+        });
+    }
     
     document.getElementById('backFromPlaylist').addEventListener('click', function() {
         document.getElementById('page-playlist').style.display = 'none';
@@ -326,7 +301,7 @@ function setupNavigation() {
 // ===== PLAYLISTS =====
 // ============================================================
 function createPlaylist(name) {
-    const id = 'playlist_' + Date.now();
+    var id = 'playlist_' + Date.now();
     state.playlists[id] = {
         id: id,
         name: name,
@@ -356,15 +331,17 @@ function deletePlaylist(id) {
 }
 
 function openPlaylist(id) {
-    const playlist = state.playlists[id];
+    var playlist = state.playlists[id];
     if (!playlist) return;
     
     state.currentPlaylist = id;
     
-    const detail = document.getElementById('playlistDetail');
-    const songs = playlist.songs.map(function(songId) {
-        return getSongById(songId);
-    }).filter(function(s) { return s; });
+    var detail = document.getElementById('playlistDetail');
+    var songs = [];
+    for (var i = 0; i < playlist.songs.length; i++) {
+        var song = getSongById(playlist.songs[i]);
+        if (song) songs.push(song);
+    }
     
     var html = '';
     html += '<div class="playlist-detail-header">';
@@ -382,7 +359,8 @@ function openPlaylist(id) {
     html += '</div>';
     html += '<div class="playlist-tracks">';
     
-    songs.forEach(function(song) {
+    for (var j = 0; j < songs.length; j++) {
+        var song = songs[j];
         html += '<div class="playlist-track" onclick="playSong(\'' + song.id + '\', \'' + id + '\')">';
         html += '    <div class="track-artwork">' + (song.cover || '🎵') + '</div>';
         html += '    <div class="track-info">';
@@ -391,50 +369,32 @@ function openPlaylist(id) {
         html += '    </div>';
         html += '    <button class="track-play" onclick="event.stopPropagation(); playSong(\'' + song.id + '\', \'' + id + '\')">▶️</button>';
         html += '</div>';
-    });
+    }
     
     html += '</div>';
     detail.innerHTML = html;
     
-    document.querySelectorAll('.page-content').forEach(function(p) {
-        p.classList.remove('active');
-    });
+    var allPages = document.querySelectorAll('.page-content');
+    for (var k = 0; k < allPages.length; k++) {
+        allPages[k].classList.remove('active');
+    }
     document.getElementById('page-playlist').style.display = 'block';
 }
 
 function playPlaylist(id) {
-    const playlist = state.playlists[id];
+    var playlist = state.playlists[id];
     if (!playlist || !playlist.songs.length) return;
     
-    state.queue = playlist.songs.map(function(songId) {
-        return getSongById(songId);
-    }).filter(function(s) { return s; });
+    state.queue = [];
+    for (var i = 0; i < playlist.songs.length; i++) {
+        var song = getSongById(playlist.songs[i]);
+        if (song) state.queue.push(song);
+    }
     state.currentSongIndex = 0;
     
     if (state.queue.length > 0) {
         playSong(state.queue[0].id, id);
     }
-}
-
-function getSongById(id) {
-    for (var playlist in MUSIC_DATA) {
-        for (var i = 0; i < MUSIC_DATA[playlist].length; i++) {
-            if (MUSIC_DATA[playlist][i].id === id) {
-                return MUSIC_DATA[playlist][i];
-            }
-        }
-    }
-    return null;
-}
-
-function getAllSongs() {
-    var all = [];
-    for (var playlist in MUSIC_DATA) {
-        for (var i = 0; i < MUSIC_DATA[playlist].length; i++) {
-            all.push(MUSIC_DATA[playlist][i]);
-        }
-    }
-    return all;
 }
 
 // ============================================================
@@ -445,24 +405,30 @@ function setupPlayer() {
     document.getElementById('prevBtn').addEventListener('click', prevSong);
     document.getElementById('nextBtn').addEventListener('click', nextSong);
     
-    document.querySelector('.progress-bar').addEventListener('click', function(e) {
-        if (!state.player || !state.playerReady) return;
-        var rect = this.getBoundingClientRect();
-        var percent = (e.clientX - rect.left) / rect.width;
-        var duration = state.player.getDuration();
-        if (duration > 0) {
-            state.player.seekTo(percent * duration, true);
-        }
-    });
+    var progressBar = document.querySelector('.progress-bar');
+    if (progressBar) {
+        progressBar.addEventListener('click', function(e) {
+            if (!state.player || !state.playerReady) return;
+            var rect = this.getBoundingClientRect();
+            var percent = (e.clientX - rect.left) / rect.width;
+            var duration = state.player.getDuration();
+            if (duration > 0) {
+                state.player.seekTo(percent * duration, true);
+            }
+        });
+    }
     
-    document.querySelector('.volume-bar').addEventListener('click', function(e) {
-        var rect = this.getBoundingClientRect();
-        var percent = Math.min(100, Math.max(0, ((e.clientX - rect.left) / rect.width) * 100));
-        document.getElementById('volumeProgress').style.width = percent + '%';
-        if (state.player && state.playerReady) {
-            state.player.setVolume(percent);
-        }
-    });
+    var volumeBar = document.querySelector('.volume-bar');
+    if (volumeBar) {
+        volumeBar.addEventListener('click', function(e) {
+            var rect = this.getBoundingClientRect();
+            var percent = Math.min(100, Math.max(0, ((e.clientX - rect.left) / rect.width) * 100));
+            document.getElementById('volumeProgress').style.width = percent + '%';
+            if (state.player && state.playerReady) {
+                state.player.setVolume(percent);
+            }
+        });
+    }
     
     document.getElementById('toggleLyrics').addEventListener('click', toggleLyrics);
     document.getElementById('closeLyrics').addEventListener('click', function() {
@@ -511,9 +477,9 @@ function playSong(songId, playlistId) {
 
 function togglePlay() {
     if (!state.player || !state.playerReady) {
-        var firstSong = getAllSongs()[0];
-        if (firstSong) {
-            playSong(firstSong.id);
+        var allSongs = getAllSongs();
+        if (allSongs.length > 0) {
+            playSong(allSongs[0].id);
         } else {
             alert('Nenhuma música disponível!');
         }
@@ -700,7 +666,9 @@ function updateProgress() {
                 document.getElementById('currentTime').textContent = formatTime(currentTime);
                 document.getElementById('totalTime').textContent = formatTime(duration);
             }
-        } catch (error) {}
+        } catch (error) {
+            // Ignora erros de atualização
+        }
     }
     requestAnimationFrame(updateProgress);
 }
@@ -710,6 +678,58 @@ function formatTime(seconds) {
     var min = Math.floor(seconds / 60);
     var sec = Math.floor(seconds % 60);
     return min + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+// ============================================================
+// ===== INICIALIZAÇÃO DA API DO YOUTUBE =====
+// ============================================================
+// Esta função é chamada automaticamente quando a API do YouTube carrega
+function onYouTubeIframeAPIReady() {
+    console.log('🎵 YouTube API carregada!');
+    
+    if (!state.player) {
+        state.player = new YT.Player('player', {
+            height: '1',
+            width: '1',
+            playerVars: {
+                'autoplay': 0,
+                'controls': 0,
+                'disablekb': 1,
+                'modestbranding': 1,
+                'rel': 0,
+                'showinfo': 0,
+                'iv_load_policy': 3,
+                'fs': 0
+            },
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange,
+                'onError': onPlayerError
+            }
+        });
+    }
+}
+
+function loadYouTubeAPI() {
+    // Verifica se a API já está carregada
+    if (typeof YT !== 'undefined' && YT.Player) {
+        onYouTubeIframeAPIReady();
+        return;
+    }
+    
+    // Carrega a API
+    var tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    
+    // Fallback: se a API não carregar em 10 segundos, tenta novamente
+    setTimeout(function() {
+        if (!state.playerReady && typeof YT === 'undefined') {
+            console.warn('⚠️ YouTube API não carregou, tentando novamente...');
+            loadYouTubeAPI();
+        }
+    }, 10000);
 }
 
 // ============================================================
@@ -725,14 +745,23 @@ function renderHome() {
     
     for (var id in state.playlists) {
         var playlist = state.playlists[id];
-        if (playlist.isCustom && !playlists.find(function(p) { return p.id === id; })) {
-            playlists.push({
-                id: id,
-                name: playlist.name,
-                cover: playlist.cover || '📋',
-                description: playlist.songs.length + ' músicas',
-                isCustom: true
-            });
+        if (playlist.isCustom) {
+            var exists = false;
+            for (var i = 0; i < playlists.length; i++) {
+                if (playlists[i].id === id) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                playlists.push({
+                    id: id,
+                    name: playlist.name,
+                    cover: playlist.cover || '📋',
+                    description: playlist.songs.length + ' músicas',
+                    isCustom: true
+                });
+            }
         }
     }
     
@@ -808,18 +837,22 @@ function renderSidebar() {
     html += '<li class="create-playlist-btn">➕ Criar playlist</li>';
     container.innerHTML = html;
     
-    container.querySelectorAll('li[data-playlist]').forEach(function(item) {
-        item.addEventListener('click', function() {
+    var sidebarItems = container.querySelectorAll('li[data-playlist]');
+    for (var j = 0; j < sidebarItems.length; j++) {
+        sidebarItems[j].addEventListener('click', function() {
             openPlaylist(this.dataset.playlist);
         });
-    });
+    }
     
-    container.querySelector('.create-playlist-btn').addEventListener('click', function() {
-        var name = prompt('Nome da nova playlist:');
-        if (name && name.trim()) {
-            createPlaylist(name.trim());
-        }
-    });
+    var createBtn = container.querySelector('.create-playlist-btn');
+    if (createBtn) {
+        createBtn.addEventListener('click', function() {
+            var name = prompt('Nome da nova playlist:');
+            if (name && name.trim()) {
+                createPlaylist(name.trim());
+            }
+        });
+    }
 }
 
 // ============================================================
@@ -832,7 +865,11 @@ function setupSearch() {
     
     input.addEventListener('input', function() {
         var query = this.value.trim().toLowerCase();
-        clearBtn.classList.toggle('visible', query.length > 0);
+        if (query.length > 0) {
+            clearBtn.classList.add('visible');
+        } else {
+            clearBtn.classList.remove('visible');
+        }
         
         if (query.length === 0) {
             results.innerHTML = '';
@@ -847,44 +884,4 @@ function setupSearch() {
                 (song.artist && song.artist.toLowerCase().indexOf(query) !== -1)) {
                 filtered.push(song);
             }
-        }
-        
-        if (filtered.length === 0) {
-            results.innerHTML = '<div class="no-results">🎵 Nenhuma música encontrada</div>';
-            return;
-        }
-        
-        var html = '';
-        for (var i = 0; i < filtered.length; i++) {
-            var song = filtered[i];
-            html += '<div class="search-result-item" onclick="playSong(\'' + song.id + '\')">';
-            html += '    <div class="result-artwork">' + (song.cover || '🎵') + '</div>';
-            html += '    <div class="result-info">';
-            html += '        <div class="result-title">' + song.title + '</div>';
-            html += '        <div class="result-artist">' + (song.artist || 'Desconhecido') + '</div>';
-            html += '    </div>';
-            html += '    <button class="result-play" onclick="event.stopPropagation(); playSong(\'' + song.id + '\')">▶️</button>';
-            html += '</div>';
-        }
-        results.innerHTML = html;
-    });
-    
-    clearBtn.addEventListener('click', function() {
-        input.value = '';
-        input.dispatchEvent(new Event('input'));
-        input.focus();
-    });
-}
-
-// ============================================================
-// ===== CONFIGURAÇÃO DE EVENTOS =====
-// ============================================================
-function setupEvents() {
-    setupLoginEvents();
-    setupNavigation();
-    setupPlayer();
-    setupSearch();
-}
-
-console.log('🎵 Pobrefy carregado!');
-console.log('📌 As músicas agora estão funcionando com IDs reais do YouTube!');
+       
