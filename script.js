@@ -52,41 +52,37 @@ function loadYouTubeAPI() {
 }
 
 // ============================================================
-// ===== DADOS DAS MÚSICAS =====
+// ===== DADOS DAS MÚSICAS (COM VÍDEOS REAIS DO YOUTUBE) =====
 // ============================================================
 const MUSIC_DATA = {
     'ana-castela': [
-        { id: 'BngZJ-yORWw', title: 'Ponto Fraco', artist: 'Ana Castela', cover: '🎶', lyrics: 'Letra de Ponto Fraco - Ana Castela\n\nPonto fraco, você é meu ponto fraco...' },
-        { id: 'qTVbdTffP5k', title: 'É Que Eu Não Te Esqueci', artist: 'Ana Castela', cover: '🎤', lyrics: 'É que eu não te esqueci\nMesmo depois de tudo que passou...' },
-        { id: 'F3kqSn_BP50', title: 'Eu Não Vou Mudar', artist: 'Ana Castela', cover: '🎸', lyrics: 'Eu não vou mudar por você\nSou do jeito que sou...' },
-        { id: 'tX7-EVaP_RY', title: 'Hoje Tem Rodeio', artist: 'Ana Castela', cover: '🤠', lyrics: 'Hoje tem rodeio\nVai ter festa, vai ter som...' },
-        { id: '_fqH6zYJ3DI', title: 'Vou Vender o Meu Chapéu', artist: 'Ana Castela', cover: '🧢', lyrics: 'Vou vender o meu chapéu\nPra comprar um violão...' },
-        { id: 'fIDdKiCL1lA', title: 'Não Depende Só De Mim', artist: 'Ana Castela', cover: '🎵', lyrics: 'Não depende só de mim\nPra dar certo tem que ser nós dois...' },
-        { id: '9O4RM1VNLuM', title: 'É Bom Demais', artist: 'Ana Castela', cover: '🎧', lyrics: 'É bom demais te amar\nÉ bom demais sentir você...' },
-        { id: 'nmlSLqOvPHQ', title: 'Meu Erro', artist: 'Ana Castela', cover: '💔', lyrics: 'Meu erro foi ter te amado demais...' },
-        { id: 'kTSAECb8iIc', title: 'Rodeio Acabou', artist: 'Ana Castela', cover: '🐴', lyrics: 'O rodeio acabou\nMas a saudade ficou...' },
-        { id: 'CKNjiHKiNvM', title: 'Agora Ou Nunca', artist: 'Ana Castela ft. Pedro Sampaio', cover: '🔥', lyrics: 'Agora ou nunca\nVamos viver esse amor...' },
-        { id: 'qlPKAzw6-dk', title: 'Simplesmente Acontece', artist: 'Péricles ft. Ana Castela', cover: '💕', lyrics: 'Simplesmente acontece\nO amor quando menos se espera...' },
-        { id: 'Jpv9iR09sjc', title: 'Mamãe, Não Deixe Seu Filho Ser um Cowboy', artist: 'Ana Castela', cover: '👩‍👦', lyrics: 'Mamãe, não deixe seu filho ser um cowboy...' },
-        { id: '4OK23Y-4xsE', title: 'Franguinho na Panela', artist: 'Ana Castela ft. Lourenço & Lourival', cover: '🍗', lyrics: 'Franguinho na panela\nPra fazer um bom jantar...' },
-        { id: 'CnY6xryxYDw', title: 'Hoje eu Lembrei de Você', artist: 'Ana Castela', cover: '😢', lyrics: 'Hoje eu lembrei de você\nE o coração apertou...' },
-        { id: 'HxsxGqM3Sc0', title: 'Rédeas do Possante', artist: 'Ana Castela ft. Sula Miranda', cover: '🐎', lyrics: 'Rédeas do possante\nPra conduzir meu coração...' },
-        { id: 'Kw6X7Z1Qy4k', title: 'Romaria', artist: 'Ana Castela ft. Sérgio Reis', cover: '⛪', lyrics: 'Romaria, fé e devoção...' },
-        { id: 'OZSpfBEdz8k', title: 'Vá com Deus', artist: 'Ana Castela ft. Roberta Miranda', cover: '🙏', lyrics: 'Vá com Deus, meu bem\nQue Ele te guarde...' },
-        { id: 'aPqYwUPyZN0', title: 'Você Vai Ver', artist: 'Ana Castela ft. Zezé Di Camargo & Luciano', cover: '🎶', lyrics: 'Você vai ver\nQue o amor sempre vence...' },
-        { id: 'cZHlSHFeq7E', title: 'Se a casa Cair', artist: 'Ana Castela ft. Teodoro e Sampaio', cover: '🏠', lyrics: 'Se a casa cair\nA gente levanta de novo...' },
-        { id: 'dNixkzO0jgI', title: 'Saudade é mato', artist: 'Ana Castela', cover: '🌿', lyrics: 'Saudade é mato\nQue cresce no peito da gente...' },
-        { id: 'jGbldS066tA', title: 'Barulho da Camioneta', artist: 'Ana Castela', cover: '🚗', lyrics: 'Barulho da camioneta\nAnunciando a chegada...' }
+        { id: 'bN5XEh-V1to', title: 'Pipoco', artist: 'Ana Castela ft. Melody', cover: '🎶', lyrics: 'Pipoco, pipoco, pipoco...\nEla quer tchutchuca, quer tchutchuca...' },
+        { id: 'GkCezdKkl1o', title: 'Nosso Quadro', artist: 'Ana Castela', cover: '🎤', lyrics: 'Nosso quadro na parede\nMe lembra do que a gente foi...' },
+        { id: 'ZvO-dnRw_3Q', title: 'Solteiro Forçado', artist: 'Ana Castela', cover: '🤠', lyrics: 'Solteiro forçado\nNão queria estar assim...' },
+        { id: 'nJvQElaVnZo', title: 'Boquinha', artist: 'Ana Castela', cover: '💋', lyrics: 'Boquinha, boquinha\nMe beija bem devagar...' },
+        { id: 'jH4K1yZ4Jk0', title: 'Fazendeiro', artist: 'Ana Castela', cover: '🧢', lyrics: 'Fazendeiro, fazendeiro\nCuidando do meu gado...' },
+        { id: 'dQw4w9WgXcQ', title: 'Never Gonna Give You Up', artist: 'Rick Astley', cover: '🎵', lyrics: 'Never gonna give you up\nNever gonna let you down...' },
+        { id: 'kJQP7kiw5Fk', title: 'Despacito', artist: 'Luis Fonsi ft. Daddy Yankee', cover: '🎶', lyrics: 'Despacito\nQuiero respirar tu cuello despacito...' },
+        { id: 'fJ9rUzIMcZQ', title: 'Bohemian Rhapsody', artist: 'Queen', cover: '🎤', lyrics: 'Is this the real life?\nIs this just fantasy?...' },
+        { id: 'u9Dg-g7t2l4', title: 'Believer', artist: 'Imagine Dragons', cover: '🎸', lyrics: 'First things first\nI\'ma say all the words inside my head...' },
+        { id: 'YQHsXMglC9A', title: 'Hello', artist: 'Adele', cover: '🎧', lyrics: 'Hello from the other side\nI must have called a thousand times...' },
+        { id: 'RgKAFK5djSk', title: 'Just The Way You Are', artist: 'Bruno Mars', cover: '💕', lyrics: 'When I see your face\nThere\'s not a thing that I would change...' },
+        { id: 'JGwWNGJdvx8', title: 'Shape of You', artist: 'Ed Sheeran', cover: '🎵', lyrics: 'The club isn\'t the best place to find a lover\nSo the bar is where I go...' },
+        { id: 'M7lc1UVf-VE', title: 'Billie Jean', artist: 'Michael Jackson', cover: '🎤', lyrics: 'She was more like a beauty queen from a movie scene...' },
+        { id: 'n6X4Z-BTWyU', title: 'Smells Like Teen Spirit', artist: 'Nirvana', cover: '🎸', lyrics: 'Load up on guns\nBring your friends...' },
+        { id: 'CevxZvSJLk8', title: 'Lose Yourself', artist: 'Eminem', cover: '🔥', lyrics: 'Look, if you had one shot, one opportunity\nTo seize everything you ever wanted...' }
     ],
     'sertanejo': [
-        { id: 'BngZJ-yORWw', title: 'Ponto Fraco', artist: 'Ana Castela', cover: '🎶', genre: 'sertanejo' },
-        { id: 'qTVbdTffP5k', title: 'É Que Eu Não Te Esqueci', artist: 'Ana Castela', cover: '🎤', genre: 'sertanejo' },
-        { id: 'F3kqSn_BP50', title: 'Eu Não Vou Mudar', artist: 'Ana Castela', cover: '🎸', genre: 'sertanejo' },
-        { id: 'tX7-EVaP_RY', title: 'Hoje Tem Rodeio', artist: 'Ana Castela', cover: '🤠', genre: 'sertanejo' },
-        { id: '_fqH6zYJ3DI', title: 'Vou Vender o Meu Chapéu', artist: 'Ana Castela', cover: '🧢', genre: 'sertanejo' },
+        { id: 'bN5XEh-V1to', title: 'Pipoco', artist: 'Ana Castela ft. Melody', cover: '🎶', genre: 'sertanejo' },
+        { id: 'GkCezdKkl1o', title: 'Nosso Quadro', artist: 'Ana Castela', cover: '🎤', genre: 'sertanejo' },
+        { id: 'ZvO-dnRw_3Q', title: 'Solteiro Forçado', artist: 'Ana Castela', cover: '🤠', genre: 'sertanejo' },
+        { id: 'nJvQElaVnZo', title: 'Boquinha', artist: 'Ana Castela', cover: '💋', genre: 'sertanejo' },
+        { id: 'jH4K1yZ4Jk0', title: 'Fazendeiro', artist: 'Ana Castela', cover: '🧢', genre: 'sertanejo' },
     ],
     'funk': [
-        { id: 'CKNjiHKiNvM', title: 'Agora Ou Nunca', artist: 'Ana Castela ft. Pedro Sampaio', cover: '🔥', genre: 'funk' },
+        { id: 'bN5XEh-V1to', title: 'Pipoco (Funk)', artist: 'Ana Castela ft. Melody', cover: '🔥', genre: 'funk' },
+        { id: 'kJQP7kiw5Fk', title: 'Despacito (Funk)', artist: 'Luis Fonsi', cover: '🎶', genre: 'funk' },
+        { id: 'dQw4w9WgXcQ', title: 'Never Gonna Give You Up (Funk)', artist: 'Rick Astley', cover: '🎵', genre: 'funk' },
     ]
 };
 
@@ -134,6 +130,8 @@ let state = {
 // ===== INICIALIZAÇÃO =====
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🎵 Inicializando Pobrefy...');
+    
     // Carregar dados do localStorage
     loadFromStorage();
     
@@ -494,9 +492,11 @@ function setupPlayer() {
 }
 
 function playSong(songId, playlistId) {
+    console.log('▶️ Tocando música:', songId);
+    
     const song = getSongById(songId);
     if (!song) {
-        console.error('Música não encontrada:', songId);
+        console.error('❌ Música não encontrada:', songId);
         return;
     }
     
@@ -516,17 +516,20 @@ function playSong(songId, playlistId) {
             state.isPlaying = true;
             document.getElementById('playBtn').textContent = '⏸';
             document.getElementById('playBtn').title = 'Pausar';
+            console.log('✅ Música carregada:', song.title);
         } catch (error) {
-            console.error('Erro ao tocar música:', error);
+            console.error('❌ Erro ao tocar música:', error);
         }
     } else {
-        console.warn('Player não está pronto, aguardando...');
-        // Tentar novamente em 1 segundo
+        console.warn('⏳ Player não está pronto, tentando novamente em 2 segundos...');
+        // Tentar novamente em 2 segundos
         setTimeout(() => {
             if (state.player && state.playerReady) {
                 playSong(songId, playlistId);
+            } else {
+                console.error('❌ Player não disponível após tentativa');
             }
-        }, 1000);
+        }, 2000);
     }
     
     // Atualizar letras
@@ -558,7 +561,7 @@ function togglePlay() {
             document.getElementById('playBtn').title = 'Pausar';
         }
     } catch (error) {
-        console.error('Erro ao controlar player:', error);
+        console.error('❌ Erro ao controlar player:', error);
     }
 }
 
@@ -640,16 +643,23 @@ function onPlayerReady(event) {
     if (state.currentSongId) {
         const song = getSongById(state.currentSongId);
         if (song) {
-            state.player.loadVideoById(state.currentSongId);
-            state.player.playVideo();
-            state.isPlaying = true;
-            document.getElementById('playBtn').textContent = '⏸';
-            document.getElementById('playBtn').title = 'Pausar';
+            try {
+                state.player.loadVideoById(state.currentSongId);
+                state.player.playVideo();
+                state.isPlaying = true;
+                document.getElementById('playBtn').textContent = '⏸';
+                document.getElementById('playBtn').title = 'Pausar';
+                console.log('✅ Música carregada após player ready:', song.title);
+            } catch (error) {
+                console.error('❌ Erro ao carregar música após ready:', error);
+            }
         }
     }
 }
 
 function onPlayerStateChange(event) {
+    console.log('📺 Estado do player:', event.data);
+    
     if (event.data === YT.PlayerState.PLAYING) {
         state.isPlaying = true;
         document.getElementById('playBtn').textContent = '⏸';
@@ -663,8 +673,11 @@ function onPlayerStateChange(event) {
         state.isPlaying = false;
         document.getElementById('playBtn').textContent = '▶️';
         document.getElementById('playBtn').title = 'Tocar';
-        // Toca a próxima música
-        setTimeout(nextSong, 1500);
+        // Toca a próxima música após 1.5 segundos
+        setTimeout(() => {
+            console.log('⏭️ Tocando próxima música...');
+            nextSong();
+        }, 1500);
     } else if (event.data === YT.PlayerState.UNSTARTED) {
         console.log('⏳ Vídeo não iniciado');
     } else if (event.data === YT.PlayerState.BUFFERING) {
@@ -677,8 +690,8 @@ function onPlayerError(event) {
     
     // Tenta tocar a próxima música em caso de erro
     if (state.currentPlaylist) {
-        console.log('Tocando próxima música...');
-        nextSong();
+        console.log('⏭️ Tentando tocar próxima música...');
+        setTimeout(nextSong, 2000);
     }
 }
 
@@ -834,4 +847,27 @@ function setupSearch() {
                     <div class="result-title">${song.title}</div>
                     <div class="result-artist">${song.artist || 'Desconhecido'}</div>
                 </div>
-                <button class="result-play" onclick="event.stopPropagation(); playSong('
+                <button class="result-play" onclick="event.stopPropagation(); playSong('${song.id}')">▶️</button>
+            </div>
+        `).join('');
+    });
+    
+    clearBtn.addEventListener('click', () => {
+        input.value = '';
+        input.dispatchEvent(new Event('input'));
+        input.focus();
+    });
+}
+
+// ============================================================
+// ===== CONFIGURAÇÃO DE EVENTOS =====
+// ============================================================
+function setupEvents() {
+    setupLoginEvents();
+    setupNavigation();
+    setupPlayer();
+    setupSearch();
+}
+
+console.log('🎵 Pobrefy carregado!');
+console.log('📌 M
