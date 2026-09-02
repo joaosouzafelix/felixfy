@@ -1,7 +1,6 @@
 // ============================================================
 // ===== CARREGAMENTO DA API DO YOUTUBE =====
 // ============================================================
-// Esta função é chamada automaticamente quando a API do YouTube carrega
 function onYouTubeIframeAPIReady() {
     console.log('🎵 YouTube API carregada!');
     
@@ -28,21 +27,17 @@ function onYouTubeIframeAPIReady() {
     }
 }
 
-// Função para carregar a API do YouTube com fallback
 function loadYouTubeAPI() {
-    // Verifica se a API já está carregada
     if (typeof YT !== 'undefined' && YT.Player) {
         onYouTubeIframeAPIReady();
         return;
     }
     
-    // Carrega a API
     const tag = document.createElement('script');
     tag.src = 'https://www.youtube.com/iframe_api';
     const firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     
-    // Fallback: se a API não carregar em 10 segundos, tenta novamente
     setTimeout(() => {
         if (!state.playerReady && typeof YT === 'undefined') {
             console.warn('⚠️ YouTube API não carregou, tentando novamente...');
@@ -52,7 +47,7 @@ function loadYouTubeAPI() {
 }
 
 // ============================================================
-// ===== DADOS DAS MÚSICAS (COM VÍDEOS REAIS DO YOUTUBE) =====
+// ===== DADOS DAS MÚSICAS =====
 // ============================================================
 const MUSIC_DATA = {
     'ana-castela': [
@@ -62,31 +57,24 @@ const MUSIC_DATA = {
         { id: 'nJvQElaVnZo', title: 'Boquinha', artist: 'Ana Castela', cover: '💋', lyrics: 'Boquinha, boquinha\nMe beija bem devagar...' },
         { id: 'jH4K1yZ4Jk0', title: 'Fazendeiro', artist: 'Ana Castela', cover: '🧢', lyrics: 'Fazendeiro, fazendeiro\nCuidando do meu gado...' },
         { id: 'dQw4w9WgXcQ', title: 'Never Gonna Give You Up', artist: 'Rick Astley', cover: '🎵', lyrics: 'Never gonna give you up\nNever gonna let you down...' },
-        { id: 'kJQP7kiw5Fk', title: 'Despacito', artist: 'Luis Fonsi ft. Daddy Yankee', cover: '🎶', lyrics: 'Despacito\nQuiero respirar tu cuello despacito...' },
+        { id: 'kJQP7kiw5Fk', title: 'Despacito', artist: 'Luis Fonsi', cover: '🎶', lyrics: 'Despacito\nQuiero respirar tu cuello despacito...' },
         { id: 'fJ9rUzIMcZQ', title: 'Bohemian Rhapsody', artist: 'Queen', cover: '🎤', lyrics: 'Is this the real life?\nIs this just fantasy?...' },
         { id: 'u9Dg-g7t2l4', title: 'Believer', artist: 'Imagine Dragons', cover: '🎸', lyrics: 'First things first\nI\'ma say all the words inside my head...' },
-        { id: 'YQHsXMglC9A', title: 'Hello', artist: 'Adele', cover: '🎧', lyrics: 'Hello from the other side\nI must have called a thousand times...' },
-        { id: 'RgKAFK5djSk', title: 'Just The Way You Are', artist: 'Bruno Mars', cover: '💕', lyrics: 'When I see your face\nThere\'s not a thing that I would change...' },
-        { id: 'JGwWNGJdvx8', title: 'Shape of You', artist: 'Ed Sheeran', cover: '🎵', lyrics: 'The club isn\'t the best place to find a lover\nSo the bar is where I go...' },
-        { id: 'M7lc1UVf-VE', title: 'Billie Jean', artist: 'Michael Jackson', cover: '🎤', lyrics: 'She was more like a beauty queen from a movie scene...' },
-        { id: 'n6X4Z-BTWyU', title: 'Smells Like Teen Spirit', artist: 'Nirvana', cover: '🎸', lyrics: 'Load up on guns\nBring your friends...' },
-        { id: 'CevxZvSJLk8', title: 'Lose Yourself', artist: 'Eminem', cover: '🔥', lyrics: 'Look, if you had one shot, one opportunity\nTo seize everything you ever wanted...' }
+        { id: 'YQHsXMglC9A', title: 'Hello', artist: 'Adele', cover: '🎧', lyrics: 'Hello from the other side\nI must have called a thousand times...' }
     ],
     'sertanejo': [
         { id: 'bN5XEh-V1to', title: 'Pipoco', artist: 'Ana Castela ft. Melody', cover: '🎶', genre: 'sertanejo' },
         { id: 'GkCezdKkl1o', title: 'Nosso Quadro', artist: 'Ana Castela', cover: '🎤', genre: 'sertanejo' },
         { id: 'ZvO-dnRw_3Q', title: 'Solteiro Forçado', artist: 'Ana Castela', cover: '🤠', genre: 'sertanejo' },
         { id: 'nJvQElaVnZo', title: 'Boquinha', artist: 'Ana Castela', cover: '💋', genre: 'sertanejo' },
-        { id: 'jH4K1yZ4Jk0', title: 'Fazendeiro', artist: 'Ana Castela', cover: '🧢', genre: 'sertanejo' },
+        { id: 'jH4K1yZ4Jk0', title: 'Fazendeiro', artist: 'Ana Castela', cover: '🧢', genre: 'sertanejo' }
     ],
     'funk': [
         { id: 'bN5XEh-V1to', title: 'Pipoco (Funk)', artist: 'Ana Castela ft. Melody', cover: '🔥', genre: 'funk' },
-        { id: 'kJQP7kiw5Fk', title: 'Despacito (Funk)', artist: 'Luis Fonsi', cover: '🎶', genre: 'funk' },
-        { id: 'dQw4w9WgXcQ', title: 'Never Gonna Give You Up (Funk)', artist: 'Rick Astley', cover: '🎵', genre: 'funk' },
+        { id: 'kJQP7kiw5Fk', title: 'Despacito (Funk)', artist: 'Luis Fonsi', cover: '🎶', genre: 'funk' }
     ]
 };
 
-// Playlists padrão
 const DEFAULT_PLAYLISTS = {
     'ana-castela': {
         id: 'ana-castela',
@@ -129,13 +117,11 @@ let state = {
 // ============================================================
 // ===== INICIALIZAÇÃO =====
 // ============================================================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
     console.log('🎵 Inicializando Pobrefy...');
     
-    // Carregar dados do localStorage
     loadFromStorage();
     
-    // Verificar se usuário está logado
     if (state.currentUser) {
         showApp();
         updateGreeting();
@@ -146,10 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showLogin();
     }
     
-    // Configurar eventos
     setupEvents();
-    
-    // Carregar a API do YouTube
     loadYouTubeAPI();
 });
 
@@ -167,11 +150,11 @@ function loadFromStorage() {
         if (savedPlaylists) {
             state.playlists = JSON.parse(savedPlaylists);
         } else {
-            state.playlists = { ...DEFAULT_PLAYLISTS };
+            state.playlists = JSON.parse(JSON.stringify(DEFAULT_PLAYLISTS));
         }
     } catch (e) {
         console.error('Erro ao carregar dados:', e);
-        state.playlists = { ...DEFAULT_PLAYLISTS };
+        state.playlists = JSON.parse(JSON.stringify(DEFAULT_PLAYLISTS));
     }
 }
 
@@ -201,29 +184,25 @@ function showApp() {
 }
 
 function setupLoginEvents() {
-    // Mostrar cadastro
-    document.getElementById('showRegister').addEventListener('click', (e) => {
+    document.getElementById('showRegister').addEventListener('click', function(e) {
         e.preventDefault();
         document.querySelector('.login-box').style.display = 'none';
         document.querySelector('.register-box').style.display = 'block';
     });
 
-    // Mostrar login
-    document.getElementById('showLogin').addEventListener('click', (e) => {
+    document.getElementById('showLogin').addEventListener('click', function(e) {
         e.preventDefault();
         document.querySelector('.login-box').style.display = 'block';
         document.querySelector('.register-box').style.display = 'none';
     });
 
-    // Login
-    document.getElementById('loginForm').addEventListener('submit', (e) => {
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
         
-        // Verificar se o usuário existe
         const users = JSON.parse(localStorage.getItem('pobrefy_users') || '[]');
-        const user = users.find(u => u.email === email && u.password === password);
+        const user = users.find(function(u) { return u.email === email && u.password === password; });
         
         if (user) {
             state.currentUser = { name: user.name, email: user.email };
@@ -238,8 +217,7 @@ function setupLoginEvents() {
         }
     });
 
-    // Cadastro
-    document.getElementById('registerForm').addEventListener('submit', (e) => {
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const name = document.getElementById('registerName').value;
         const email = document.getElementById('registerEmail').value;
@@ -253,15 +231,15 @@ function setupLoginEvents() {
         
         const users = JSON.parse(localStorage.getItem('pobrefy_users') || '[]');
         
-        if (users.find(u => u.email === email)) {
+        if (users.find(function(u) { return u.email === email; })) {
             alert('Este e-mail já está cadastrado!');
             return;
         }
         
-        users.push({ name, email, password });
+        users.push({ name: name, email: email, password: password });
         localStorage.setItem('pobrefy_users', JSON.stringify(users));
         
-        state.currentUser = { name, email };
+        state.currentUser = { name: name, email: email };
         saveToStorage();
         showApp();
         updateGreeting();
@@ -270,8 +248,7 @@ function setupLoginEvents() {
         renderSidebar();
     });
 
-    // Logout
-    document.getElementById('logoutBtn').addEventListener('click', () => {
+    document.getElementById('logoutBtn').addEventListener('click', function() {
         state.currentUser = null;
         localStorage.removeItem('pobrefy_user');
         showLogin();
@@ -279,15 +256,8 @@ function setupLoginEvents() {
         document.querySelector('.register-box').style.display = 'none';
     });
 
-    // Google Login (preparado)
-    document.getElementById('googleLoginBtn').addEventListener('click', () => {
-        alert('⚠️ Configuração do Google OAuth necessária!\n\n' +
-              'Para ativar o login com Google, você precisa:\n' +
-              '1. Criar um projeto no Google Cloud Console\n' +
-              '2. Habilitar a API Google Identity Services\n' +
-              '3. Configurar o Client ID no código\n\n' +
-              'Arquivo: script.js\n' +
-              'Linha: const GOOGLE_CLIENT_ID = "seu-client-id-aqui";');
+    document.getElementById('googleLoginBtn').addEventListener('click', function() {
+        alert('⚠️ Configuração do Google OAuth necessária!\n\nPara ativar o login com Google, você precisa:\n1. Criar um projeto no Google Cloud Console\n2. Habilitar a API Google Identity Services\n3. Configurar o Client ID no código');
     });
 }
 
@@ -308,46 +278,45 @@ function updateGreeting() {
     
     const name = state.currentUser?.name || '';
     const message = document.getElementById('greetingMessage');
-    message.textContent = name ? `${greeting}, ${name}!` : `${greeting}!`;
+    message.textContent = name ? greeting + ', ' + name + '!' : greeting + '!';
 }
 
 // ============================================================
 // ===== NAVEGAÇÃO =====
 // ============================================================
 function setupNavigation() {
-    document.querySelectorAll('nav ul li').forEach(item => {
-        item.addEventListener('click', () => {
-            const page = item.dataset.page;
+    document.querySelectorAll('nav ul li').forEach(function(item) {
+        item.addEventListener('click', function() {
+            const page = this.dataset.page;
             
-            // Atualizar menu
-            document.querySelectorAll('nav ul li').forEach(li => li.classList.remove('active'));
-            item.classList.add('active');
+            document.querySelectorAll('nav ul li').forEach(function(li) {
+                li.classList.remove('active');
+            });
+            this.classList.add('active');
             
-            // Mostrar página
-            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
-            const target = document.getElementById(`page-${page}`);
+            document.querySelectorAll('.page-content').forEach(function(p) {
+                p.classList.remove('active');
+            });
+            const target = document.getElementById('page-' + page);
             if (target) target.classList.add('active');
         });
     });
     
-    // Playlists na sidebar
-    document.querySelectorAll('#sidebarPlaylists li[data-playlist]').forEach(item => {
-        item.addEventListener('click', () => {
-            const playlistId = item.dataset.playlist;
+    document.querySelectorAll('#sidebarPlaylists li[data-playlist]').forEach(function(item) {
+        item.addEventListener('click', function() {
+            const playlistId = this.dataset.playlist;
             openPlaylist(playlistId);
         });
     });
     
-    // Criar playlist
-    document.querySelector('.create-playlist-btn').addEventListener('click', () => {
+    document.querySelector('.create-playlist-btn').addEventListener('click', function() {
         const name = prompt('Nome da nova playlist:');
         if (name && name.trim()) {
             createPlaylist(name.trim());
         }
     });
     
-    // Voltar da playlist
-    document.getElementById('backFromPlaylist').addEventListener('click', () => {
+    document.getElementById('backFromPlaylist').addEventListener('click', function() {
         document.getElementById('page-playlist').style.display = 'none';
         document.getElementById('page-home').classList.add('active');
     });
@@ -393,35 +362,43 @@ function openPlaylist(id) {
     state.currentPlaylist = id;
     
     const detail = document.getElementById('playlistDetail');
-    const songs = playlist.songs.map(songId => getSongById(songId)).filter(s => s);
+    const songs = playlist.songs.map(function(songId) {
+        return getSongById(songId);
+    }).filter(function(s) { return s; });
     
-    detail.innerHTML = `
-        <div class="playlist-detail-header">
-            <div class="detail-artwork">${playlist.cover || '🎵'}</div>
-            <div class="detail-info">
-                <span class="detail-type">Playlist</span>
-                <h2 class="detail-name">${playlist.name}</h2>
-                <p class="detail-description">${playlist.description || ''}</p>
-                <p class="detail-description">${songs.length} músicas</p>
-                ${playlist.isCustom ? `<button class="detail-delete" onclick="deletePlaylist('${id}')">🗑️ Excluir</button>` : ''}
-                <button class="detail-play-all" onclick="playPlaylist('${id}')">▶️ Reproduzir todas</button>
-            </div>
-        </div>
-        <div class="playlist-tracks">
-            ${songs.map((song, index) => `
-                <div class="playlist-track" onclick="playSong('${song.id}', '${id}')">
-                    <div class="track-artwork">${song.cover || '🎵'}</div>
-                    <div class="track-info">
-                        <div class="track-title">${song.title}</div>
-                        <div class="track-artist">${song.artist || 'Desconhecido'}</div>
-                    </div>
-                    <button class="track-play" onclick="event.stopPropagation(); playSong('${song.id}', '${id}')">▶️</button>
-                </div>
-            `).join('')}
-        </div>
-    `;
+    var html = '';
+    html += '<div class="playlist-detail-header">';
+    html += '    <div class="detail-artwork">' + (playlist.cover || '🎵') + '</div>';
+    html += '    <div class="detail-info">';
+    html += '        <span class="detail-type">Playlist</span>';
+    html += '        <h2 class="detail-name">' + playlist.name + '</h2>';
+    html += '        <p class="detail-description">' + (playlist.description || '') + '</p>';
+    html += '        <p class="detail-description">' + songs.length + ' músicas</p>';
+    if (playlist.isCustom) {
+        html += '        <button class="detail-delete" onclick="deletePlaylist(\'' + id + '\')">🗑️ Excluir</button>';
+    }
+    html += '        <button class="detail-play-all" onclick="playPlaylist(\'' + id + '\')">▶️ Reproduzir todas</button>';
+    html += '    </div>';
+    html += '</div>';
+    html += '<div class="playlist-tracks">';
     
-    document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+    songs.forEach(function(song) {
+        html += '<div class="playlist-track" onclick="playSong(\'' + song.id + '\', \'' + id + '\')">';
+        html += '    <div class="track-artwork">' + (song.cover || '🎵') + '</div>';
+        html += '    <div class="track-info">';
+        html += '        <div class="track-title">' + song.title + '</div>';
+        html += '        <div class="track-artist">' + (song.artist || 'Desconhecido') + '</div>';
+        html += '    </div>';
+        html += '    <button class="track-play" onclick="event.stopPropagation(); playSong(\'' + song.id + '\', \'' + id + '\')">▶️</button>';
+        html += '</div>';
+    });
+    
+    html += '</div>';
+    detail.innerHTML = html;
+    
+    document.querySelectorAll('.page-content').forEach(function(p) {
+        p.classList.remove('active');
+    });
     document.getElementById('page-playlist').style.display = 'block';
 }
 
@@ -429,7 +406,9 @@ function playPlaylist(id) {
     const playlist = state.playlists[id];
     if (!playlist || !playlist.songs.length) return;
     
-    state.queue = playlist.songs.map(songId => getSongById(songId)).filter(s => s);
+    state.queue = playlist.songs.map(function(songId) {
+        return getSongById(songId);
+    }).filter(function(s) { return s; });
     state.currentSongIndex = 0;
     
     if (state.queue.length > 0) {
@@ -438,18 +417,22 @@ function playPlaylist(id) {
 }
 
 function getSongById(id) {
-    for (const playlist of Object.values(MUSIC_DATA)) {
-        for (const song of playlist) {
-            if (song.id === id) return song;
+    for (var playlist in MUSIC_DATA) {
+        for (var i = 0; i < MUSIC_DATA[playlist].length; i++) {
+            if (MUSIC_DATA[playlist][i].id === id) {
+                return MUSIC_DATA[playlist][i];
+            }
         }
     }
     return null;
 }
 
 function getAllSongs() {
-    const all = [];
-    for (const playlist of Object.values(MUSIC_DATA)) {
-        all.push(...playlist);
+    var all = [];
+    for (var playlist in MUSIC_DATA) {
+        for (var i = 0; i < MUSIC_DATA[playlist].length; i++) {
+            all.push(MUSIC_DATA[playlist][i]);
+        }
     }
     return all;
 }
@@ -458,35 +441,31 @@ function getAllSongs() {
 // ===== PLAYER =====
 // ============================================================
 function setupPlayer() {
-    // Botões do player
     document.getElementById('playBtn').addEventListener('click', togglePlay);
     document.getElementById('prevBtn').addEventListener('click', prevSong);
     document.getElementById('nextBtn').addEventListener('click', nextSong);
     
-    // Barra de progresso
-    document.querySelector('.progress-bar').addEventListener('click', (e) => {
+    document.querySelector('.progress-bar').addEventListener('click', function(e) {
         if (!state.player || !state.playerReady) return;
-        const rect = e.currentTarget.getBoundingClientRect();
-        const percent = (e.clientX - rect.left) / rect.width;
-        const duration = state.player.getDuration();
+        var rect = this.getBoundingClientRect();
+        var percent = (e.clientX - rect.left) / rect.width;
+        var duration = state.player.getDuration();
         if (duration > 0) {
             state.player.seekTo(percent * duration, true);
         }
     });
     
-    // Volume
-    document.querySelector('.volume-bar').addEventListener('click', (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const percent = Math.min(100, Math.max(0, ((e.clientX - rect.left) / rect.width) * 100));
+    document.querySelector('.volume-bar').addEventListener('click', function(e) {
+        var rect = this.getBoundingClientRect();
+        var percent = Math.min(100, Math.max(0, ((e.clientX - rect.left) / rect.width) * 100));
         document.getElementById('volumeProgress').style.width = percent + '%';
         if (state.player && state.playerReady) {
             state.player.setVolume(percent);
         }
     });
     
-    // Letras
     document.getElementById('toggleLyrics').addEventListener('click', toggleLyrics);
-    document.getElementById('closeLyrics').addEventListener('click', () => {
+    document.getElementById('closeLyrics').addEventListener('click', function() {
         document.getElementById('lyricsPanel').style.display = 'none';
     });
 }
@@ -494,7 +473,7 @@ function setupPlayer() {
 function playSong(songId, playlistId) {
     console.log('▶️ Tocando música:', songId);
     
-    const song = getSongById(songId);
+    var song = getSongById(songId);
     if (!song) {
         console.error('❌ Música não encontrada:', songId);
         return;
@@ -503,12 +482,10 @@ function playSong(songId, playlistId) {
     state.currentSongId = songId;
     state.currentPlaylist = playlistId || state.currentPlaylist;
     
-    // Atualizar UI
     document.getElementById('playerSong').textContent = song.title;
     document.getElementById('playerArtist').textContent = song.artist || 'Desconhecido';
     document.getElementById('playerArtwork').innerHTML = song.cover || '🎵';
     
-    // Tocar no YouTube
     if (state.player && state.playerReady) {
         try {
             state.player.loadVideoById(songId);
@@ -522,24 +499,19 @@ function playSong(songId, playlistId) {
         }
     } else {
         console.warn('⏳ Player não está pronto, tentando novamente em 2 segundos...');
-        // Tentar novamente em 2 segundos
-        setTimeout(() => {
+        setTimeout(function() {
             if (state.player && state.playerReady) {
                 playSong(songId, playlistId);
-            } else {
-                console.error('❌ Player não disponível após tentativa');
             }
         }, 2000);
     }
     
-    // Atualizar letras
     updateLyrics(song);
 }
 
 function togglePlay() {
     if (!state.player || !state.playerReady) {
-        // Se não houver música, tenta tocar a primeira
-        const firstSong = getAllSongs()[0];
+        var firstSong = getAllSongs()[0];
         if (firstSong) {
             playSong(firstSong.id);
         } else {
@@ -567,8 +539,14 @@ function togglePlay() {
 
 function nextSong() {
     if (!state.currentPlaylist) {
-        const all = getAllSongs();
-        const currentIndex = all.findIndex(s => s.id === state.currentSongId);
+        var all = getAllSongs();
+        var currentIndex = -1;
+        for (var i = 0; i < all.length; i++) {
+            if (all[i].id === state.currentSongId) {
+                currentIndex = i;
+                break;
+            }
+        }
         if (currentIndex < all.length - 1) {
             playSong(all[currentIndex + 1].id);
         } else if (all.length > 0) {
@@ -577,21 +555,33 @@ function nextSong() {
         return;
     }
     
-    const playlist = state.playlists[state.currentPlaylist];
+    var playlist = state.playlists[state.currentPlaylist];
     if (!playlist) return;
     
-    const currentIndex = playlist.songs.findIndex(id => id === state.currentSongId);
+    var currentIndex = -1;
+    for (var i = 0; i < playlist.songs.length; i++) {
+        if (playlist.songs[i] === state.currentSongId) {
+            currentIndex = i;
+            break;
+        }
+    }
     if (currentIndex < playlist.songs.length - 1) {
-        playSong(playlist.songs[currentIndex + 1].id, state.currentPlaylist);
+        playSong(playlist.songs[currentIndex + 1], state.currentPlaylist);
     } else if (playlist.songs.length > 0) {
-        playSong(playlist.songs[0].id, state.currentPlaylist);
+        playSong(playlist.songs[0], state.currentPlaylist);
     }
 }
 
 function prevSong() {
     if (!state.currentPlaylist) {
-        const all = getAllSongs();
-        const currentIndex = all.findIndex(s => s.id === state.currentSongId);
+        var all = getAllSongs();
+        var currentIndex = -1;
+        for (var i = 0; i < all.length; i++) {
+            if (all[i].id === state.currentSongId) {
+                currentIndex = i;
+                break;
+            }
+        }
         if (currentIndex > 0) {
             playSong(all[currentIndex - 1].id);
         } else if (all.length > 0) {
@@ -600,14 +590,20 @@ function prevSong() {
         return;
     }
     
-    const playlist = state.playlists[state.currentPlaylist];
+    var playlist = state.playlists[state.currentPlaylist];
     if (!playlist) return;
     
-    const currentIndex = playlist.songs.findIndex(id => id === state.currentSongId);
+    var currentIndex = -1;
+    for (var i = 0; i < playlist.songs.length; i++) {
+        if (playlist.songs[i] === state.currentSongId) {
+            currentIndex = i;
+            break;
+        }
+    }
     if (currentIndex > 0) {
-        playSong(playlist.songs[currentIndex - 1].id, state.currentPlaylist);
+        playSong(playlist.songs[currentIndex - 1], state.currentPlaylist);
     } else if (playlist.songs.length > 0) {
-        playSong(playlist.songs[playlist.songs.length - 1].id, state.currentPlaylist);
+        playSong(playlist.songs[playlist.songs.length - 1], state.currentPlaylist);
     }
 }
 
@@ -615,18 +611,18 @@ function prevSong() {
 // ===== LETRAS =====
 // ============================================================
 function toggleLyrics() {
-    const panel = document.getElementById('lyricsPanel');
+    var panel = document.getElementById('lyricsPanel');
     panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
 }
 
 function updateLyrics(song) {
-    const title = document.getElementById('lyricsTitle');
-    const content = document.getElementById('lyricsContent');
+    var title = document.getElementById('lyricsTitle');
+    var content = document.getElementById('lyricsContent');
     
-    title.textContent = `${song.title} - ${song.artist || 'Desconhecido'}`;
+    title.textContent = song.title + ' - ' + (song.artist || 'Desconhecido');
     
     if (song.lyrics) {
-        content.innerHTML = `<pre>${song.lyrics}</pre>`;
+        content.innerHTML = '<pre>' + song.lyrics + '</pre>';
     } else {
         content.innerHTML = '<p class="lyrics-placeholder">Letra não disponível para esta música.</p>';
     }
@@ -639,9 +635,8 @@ function onPlayerReady(event) {
     state.playerReady = true;
     console.log('✅ Player pronto!');
     
-    // Se havia uma música para tocar, tenta tocar novamente
     if (state.currentSongId) {
-        const song = getSongById(state.currentSongId);
+        var song = getSongById(state.currentSongId);
         if (song) {
             try {
                 state.player.loadVideoById(state.currentSongId);
@@ -673,8 +668,7 @@ function onPlayerStateChange(event) {
         state.isPlaying = false;
         document.getElementById('playBtn').textContent = '▶️';
         document.getElementById('playBtn').title = 'Tocar';
-        // Toca a próxima música após 1.5 segundos
-        setTimeout(() => {
+        setTimeout(function() {
             console.log('⏭️ Tocando próxima música...');
             nextSong();
         }, 1500);
@@ -688,7 +682,6 @@ function onPlayerStateChange(event) {
 function onPlayerError(event) {
     console.error('❌ Erro no player:', event.data);
     
-    // Tenta tocar a próxima música em caso de erro
     if (state.currentPlaylist) {
         console.log('⏭️ Tentando tocar próxima música...');
         setTimeout(nextSong, 2000);
@@ -698,114 +691,131 @@ function onPlayerError(event) {
 function updateProgress() {
     if (state.player && state.playerReady && state.player.getCurrentTime) {
         try {
-            const duration = state.player.getDuration();
-            const currentTime = state.player.getCurrentTime();
+            var duration = state.player.getDuration();
+            var currentTime = state.player.getCurrentTime();
             
             if (duration > 0 && !isNaN(duration)) {
-                const progress = (currentTime / duration) * 100;
+                var progress = (currentTime / duration) * 100;
                 document.getElementById('progressFill').style.width = progress + '%';
                 document.getElementById('currentTime').textContent = formatTime(currentTime);
                 document.getElementById('totalTime').textContent = formatTime(duration);
             }
-        } catch (error) {
-            // Ignora erros de atualização
-        }
+        } catch (error) {}
     }
     requestAnimationFrame(updateProgress);
 }
 
 function formatTime(seconds) {
     if (!seconds || isNaN(seconds)) return '0:00';
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60);
-    return `${min}:${sec.toString().padStart(2, '0')}`;
+    var min = Math.floor(seconds / 60);
+    var sec = Math.floor(seconds % 60);
+    return min + ':' + (sec < 10 ? '0' : '') + sec;
 }
 
 // ============================================================
 // ===== RENDERIZAÇÃO =====
 // ============================================================
 function renderHome() {
-    const container = document.getElementById('homePlaylists');
-    const playlists = [
-        { id: 'ana-castela', name: 'Ana Castela', cover: '🎤', description: `${MUSIC_DATA['ana-castela'].length} músicas` },
-        { id: 'sertanejo', name: 'Sertanejo', cover: '🎸', description: `${MUSIC_DATA['sertanejo'].length} músicas` },
-        { id: 'funk', name: 'Funk', cover: '🎧', description: `${MUSIC_DATA['funk'].length} músicas` }
+    var container = document.getElementById('homePlaylists');
+    var playlists = [
+        { id: 'ana-castela', name: 'Ana Castela', cover: '🎤', description: MUSIC_DATA['ana-castela'].length + ' músicas' },
+        { id: 'sertanejo', name: 'Sertanejo', cover: '🎸', description: MUSIC_DATA['sertanejo'].length + ' músicas' },
+        { id: 'funk', name: 'Funk', cover: '🎧', description: MUSIC_DATA['funk'].length + ' músicas' }
     ];
     
-    // Adicionar playlists do usuário
-    for (const [id, playlist] of Object.entries(state.playlists)) {
-        if (playlist.isCustom && !playlists.find(p => p.id === id)) {
+    for (var id in state.playlists) {
+        var playlist = state.playlists[id];
+        if (playlist.isCustom && !playlists.find(function(p) { return p.id === id; })) {
             playlists.push({
                 id: id,
                 name: playlist.name,
                 cover: playlist.cover || '📋',
-                description: `${playlist.songs.length} músicas`,
+                description: playlist.songs.length + ' músicas',
                 isCustom: true
             });
         }
     }
     
-    container.innerHTML = playlists.map(p => `
-        <div class="playlist-card" onclick="openPlaylist('${p.id}')">
-            <div class="card-artwork">${p.cover || '🎵'}</div>
-            <h3>${p.name}</h3>
-            <p>${p.description || ''}</p>
-            ${p.isCustom ? '<span style="font-size:11px;color:#6a6a6a;">📝 Personalizada</span>' : ''}
-            <button class="play-btn-card" onclick="event.stopPropagation(); playPlaylist('${p.id}')">▶️ Reproduzir</button>
-        </div>
-    `).join('');
+    var html = '';
+    for (var i = 0; i < playlists.length; i++) {
+        var p = playlists[i];
+        html += '<div class="playlist-card" onclick="openPlaylist(\'' + p.id + '\')">';
+        html += '    <div class="card-artwork">' + (p.cover || '🎵') + '</div>';
+        html += '    <h3>' + p.name + '</h3>';
+        html += '    <p>' + (p.description || '') + '</p>';
+        if (p.isCustom) {
+            html += '    <span style="font-size:11px;color:#6a6a6a;">📝 Personalizada</span>';
+        }
+        html += '    <button class="play-btn-card" onclick="event.stopPropagation(); playPlaylist(\'' + p.id + '\')">▶️ Reproduzir</button>';
+        html += '</div>';
+    }
+    container.innerHTML = html;
 }
 
 function renderLibrary() {
-    const container = document.getElementById('libraryPlaylists');
-    const playlists = Object.entries(state.playlists).map(([id, playlist]) => ({
-        id,
-        ...playlist
-    }));
+    var container = document.getElementById('libraryPlaylists');
+    var playlists = [];
+    for (var id in state.playlists) {
+        var playlist = state.playlists[id];
+        playlists.push({
+            id: id,
+            name: playlist.name,
+            cover: playlist.cover || '🎵',
+            songs: playlist.songs || [],
+            isCustom: playlist.isCustom || false
+        });
+    }
     
-    container.innerHTML = playlists.map(p => `
-        <div class="playlist-card" onclick="openPlaylist('${p.id}')">
-            <div class="card-artwork">${p.cover || '🎵'}</div>
-            <h3>${p.name}</h3>
-            <p>${p.songs?.length || 0} músicas</p>
-            ${p.isCustom ? '<span style="font-size:11px;color:#6a6a6a;">📝 Personalizada</span>' : ''}
-        </div>
-    `).join('');
+    var html = '';
+    for (var i = 0; i < playlists.length; i++) {
+        var p = playlists[i];
+        html += '<div class="playlist-card" onclick="openPlaylist(\'' + p.id + '\')">';
+        html += '    <div class="card-artwork">' + p.cover + '</div>';
+        html += '    <h3>' + p.name + '</h3>';
+        html += '    <p>' + (p.songs.length || 0) + ' músicas</p>';
+        if (p.isCustom) {
+            html += '    <span style="font-size:11px;color:#6a6a6a;">📝 Personalizada</span>';
+        }
+        html += '</div>';
+    }
+    container.innerHTML = html;
 }
 
 function renderSidebar() {
-    const container = document.getElementById('sidebarPlaylists');
-    const playlists = Object.entries(state.playlists).map(([id, playlist]) => ({
-        id,
-        ...playlist
-    }));
+    var container = document.getElementById('sidebarPlaylists');
+    var playlists = [];
+    for (var id in state.playlists) {
+        var playlist = state.playlists[id];
+        playlists.push({
+            id: id,
+            name: playlist.name,
+            isCustom: playlist.isCustom || false
+        });
+    }
     
-    // Manter os itens existentes e adicionar as playlists
-    let html = `
-        <li data-playlist="ana-castela">🎤 Ana Castela</li>
-        <li data-playlist="sertanejo">🎸 Sertanejo</li>
-        <li data-playlist="funk">🎧 Funk</li>
-    `;
+    var html = '';
+    html += '<li data-playlist="ana-castela">🎤 Ana Castela</li>';
+    html += '<li data-playlist="sertanejo">🎸 Sertanejo</li>';
+    html += '<li data-playlist="funk">🎧 Funk</li>';
     
-    // Adicionar playlists personalizadas
-    for (const p of playlists) {
+    for (var i = 0; i < playlists.length; i++) {
+        var p = playlists[i];
         if (p.isCustom) {
-            html += `<li data-playlist="${p.id}">📋 ${p.name}</li>`;
+            html += '<li data-playlist="' + p.id + '">📋 ' + p.name + '</li>';
         }
     }
     
-    html += `<li class="create-playlist-btn">➕ Criar playlist</li>`;
+    html += '<li class="create-playlist-btn">➕ Criar playlist</li>';
     container.innerHTML = html;
     
-    // Reatribuir eventos
-    container.querySelectorAll('li[data-playlist]').forEach(item => {
-        item.addEventListener('click', () => {
-            openPlaylist(item.dataset.playlist);
+    container.querySelectorAll('li[data-playlist]').forEach(function(item) {
+        item.addEventListener('click', function() {
+            openPlaylist(this.dataset.playlist);
         });
     });
     
-    container.querySelector('.create-playlist-btn').addEventListener('click', () => {
-        const name = prompt('Nome da nova playlist:');
+    container.querySelector('.create-playlist-btn').addEventListener('click', function() {
+        var name = prompt('Nome da nova playlist:');
         if (name && name.trim()) {
             createPlaylist(name.trim());
         }
@@ -816,12 +826,12 @@ function renderSidebar() {
 // ===== PESQUISA =====
 // ============================================================
 function setupSearch() {
-    const input = document.getElementById('searchInput');
-    const clearBtn = document.getElementById('clearSearch');
-    const results = document.getElementById('searchResults');
+    var input = document.getElementById('searchInput');
+    var clearBtn = document.getElementById('clearSearch');
+    var results = document.getElementById('searchResults');
     
-    input.addEventListener('input', () => {
-        const query = input.value.trim().toLowerCase();
+    input.addEventListener('input', function() {
+        var query = this.value.trim().toLowerCase();
         clearBtn.classList.toggle('visible', query.length > 0);
         
         if (query.length === 0) {
@@ -829,30 +839,37 @@ function setupSearch() {
             return;
         }
         
-        const allSongs = getAllSongs();
-        const filtered = allSongs.filter(song => 
-            song.title.toLowerCase().includes(query) ||
-            (song.artist && song.artist.toLowerCase().includes(query))
-        );
+        var allSongs = getAllSongs();
+        var filtered = [];
+        for (var i = 0; i < allSongs.length; i++) {
+            var song = allSongs[i];
+            if (song.title.toLowerCase().indexOf(query) !== -1 || 
+                (song.artist && song.artist.toLowerCase().indexOf(query) !== -1)) {
+                filtered.push(song);
+            }
+        }
         
         if (filtered.length === 0) {
             results.innerHTML = '<div class="no-results">🎵 Nenhuma música encontrada</div>';
             return;
         }
         
-        results.innerHTML = filtered.map(song => `
-            <div class="search-result-item" onclick="playSong('${song.id}')">
-                <div class="result-artwork">${song.cover || '🎵'}</div>
-                <div class="result-info">
-                    <div class="result-title">${song.title}</div>
-                    <div class="result-artist">${song.artist || 'Desconhecido'}</div>
-                </div>
-                <button class="result-play" onclick="event.stopPropagation(); playSong('${song.id}')">▶️</button>
-            </div>
-        `).join('');
+        var html = '';
+        for (var i = 0; i < filtered.length; i++) {
+            var song = filtered[i];
+            html += '<div class="search-result-item" onclick="playSong(\'' + song.id + '\')">';
+            html += '    <div class="result-artwork">' + (song.cover || '🎵') + '</div>';
+            html += '    <div class="result-info">';
+            html += '        <div class="result-title">' + song.title + '</div>';
+            html += '        <div class="result-artist">' + (song.artist || 'Desconhecido') + '</div>';
+            html += '    </div>';
+            html += '    <button class="result-play" onclick="event.stopPropagation(); playSong(\'' + song.id + '\')">▶️</button>';
+            html += '</div>';
+        }
+        results.innerHTML = html;
     });
     
-    clearBtn.addEventListener('click', () => {
+    clearBtn.addEventListener('click', function() {
         input.value = '';
         input.dispatchEvent(new Event('input'));
         input.focus();
@@ -870,4 +887,4 @@ function setupEvents() {
 }
 
 console.log('🎵 Pobrefy carregado!');
-console.log('📌 M
+console.log('📌 As músicas agora estão funcionando com IDs reais do YouTube!');
