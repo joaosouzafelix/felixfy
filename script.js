@@ -1,4 +1,57 @@
 // ============================================================
+// ===== CARREGAMENTO DA API DO YOUTUBE =====
+// ============================================================
+// Esta função é chamada automaticamente quando a API do YouTube carrega
+function onYouTubeIframeAPIReady() {
+    console.log('🎵 YouTube API carregada!');
+    
+    if (!state.player) {
+        state.player = new YT.Player('player', {
+            height: '1',
+            width: '1',
+            playerVars: {
+                'autoplay': 0,
+                'controls': 0,
+                'disablekb': 1,
+                'modestbranding': 1,
+                'rel': 0,
+                'showinfo': 0,
+                'iv_load_policy': 3,
+                'fs': 0
+            },
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange,
+                'onError': onPlayerError
+            }
+        });
+    }
+}
+
+// Função para carregar a API do YouTube com fallback
+function loadYouTubeAPI() {
+    // Verifica se a API já está carregada
+    if (typeof YT !== 'undefined' && YT.Player) {
+        onYouTubeIframeAPIReady();
+        return;
+    }
+    
+    // Carrega a API
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    
+    // Fallback: se a API não carregar em 10 segundos, tenta novamente
+    setTimeout(() => {
+        if (!state.playerReady && typeof YT === 'undefined') {
+            console.warn('⚠️ YouTube API não carregou, tentando novamente...');
+            loadYouTubeAPI();
+        }
+    }, 10000);
+}
+
+// ============================================================
 // ===== DADOS DAS MÚSICAS =====
 // ============================================================
 const MUSIC_DATA = {
@@ -26,7 +79,6 @@ const MUSIC_DATA = {
         { id: 'jGbldS066tA', title: 'Barulho da Camioneta', artist: 'Ana Castela', cover: '🚗', lyrics: 'Barulho da camioneta\nAnunciando a chegada...' }
     ],
     'sertanejo': [
-        // Músicas sertanejas (usando algumas que já existem e marcando como sertanejo)
         { id: 'BngZJ-yORWw', title: 'Ponto Fraco', artist: 'Ana Castela', cover: '🎶', genre: 'sertanejo' },
         { id: 'qTVbdTffP5k', title: 'É Que Eu Não Te Esqueci', artist: 'Ana Castela', cover: '🎤', genre: 'sertanejo' },
         { id: 'F3kqSn_BP50', title: 'Eu Não Vou Mudar', artist: 'Ana Castela', cover: '🎸', genre: 'sertanejo' },
@@ -34,7 +86,6 @@ const MUSIC_DATA = {
         { id: '_fqH6zYJ3DI', title: 'Vou Vender o Meu Chapéu', artist: 'Ana Castela', cover: '🧢', genre: 'sertanejo' },
     ],
     'funk': [
-        // Músicas de funk (usando algumas que já existem e marcando como funk)
         { id: 'CKNjiHKiNvM', title: 'Agora Ou Nunca', artist: 'Ana Castela ft. Pedro Sampaio', cover: '🔥', genre: 'funk' },
     ]
 };
@@ -99,6 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Configurar eventos
     setupEvents();
+    
+    // Carregar a API do YouTube
+    loadYouTubeAPI();
 });
 
 // ============================================================
@@ -441,7 +495,10 @@ function setupPlayer() {
 
 function playSong(songId, playlistId) {
     const song = getSongById(songId);
-    if (!song) return;
+    if (!song) {
+        console.error('Música não encontrada:', songId);
+        return;
+    }
     
     state.currentSongId = songId;
     state.currentPlaylist = playlistId || state.currentPlaylist;
@@ -453,11 +510,23 @@ function playSong(songId, playlistId) {
     
     // Tocar no YouTube
     if (state.player && state.playerReady) {
-        state.player.loadVideoById(songId);
-        state.player.playVideo();
-        state.isPlaying = true;
-        document.getElementById('playBtn').textContent = '⏸';
-        document.getElementById('playBtn').title = 'Pausar';
+        try {
+            state.player.loadVideoById(songId);
+            state.player.playVideo();
+            state.isPlaying = true;
+            document.getElementById('playBtn').textContent = '⏸';
+            document.getElementById('playBtn').title = 'Pausar';
+        } catch (error) {
+            console.error('Erro ao tocar música:', error);
+        }
+    } else {
+        console.warn('Player não está pronto, aguardando...');
+        // Tentar novamente em 1 segundo
+        setTimeout(() => {
+            if (state.player && state.playerReady) {
+                playSong(songId, playlistId);
+            }
+        }, 1000);
     }
     
     // Atualizar letras
@@ -468,20 +537,28 @@ function togglePlay() {
     if (!state.player || !state.playerReady) {
         // Se não houver música, tenta tocar a primeira
         const firstSong = getAllSongs()[0];
-        if (firstSong) playSong(firstSong.id);
+        if (firstSong) {
+            playSong(firstSong.id);
+        } else {
+            alert('Nenhuma música disponível!');
+        }
         return;
     }
     
-    if (state.isPlaying) {
-        state.player.pauseVideo();
-        state.isPlaying = false;
-        document.getElementById('playBtn').textContent = '▶️';
-        document.getElementById('playBtn').title = 'Tocar';
-    } else {
-        state.player.playVideo();
-        state.isPlaying = true;
-        document.getElementById('playBtn').textContent = '⏸';
-        document.getElementById('playBtn').title = 'Pausar';
+    try {
+        if (state.isPlaying) {
+            state.player.pauseVideo();
+            state.isPlaying = false;
+            document.getElementById('playBtn').textContent = '▶️';
+            document.getElementById('playBtn').title = 'Tocar';
+        } else {
+            state.player.playVideo();
+            state.isPlaying = true;
+            document.getElementById('playBtn').textContent = '⏸';
+            document.getElementById('playBtn').title = 'Pausar';
+        }
+    } catch (error) {
+        console.error('Erro ao controlar player:', error);
     }
 }
 
@@ -491,6 +568,8 @@ function nextSong() {
         const currentIndex = all.findIndex(s => s.id === state.currentSongId);
         if (currentIndex < all.length - 1) {
             playSong(all[currentIndex + 1].id);
+        } else if (all.length > 0) {
+            playSong(all[0].id);
         }
         return;
     }
@@ -512,6 +591,8 @@ function prevSong() {
         const currentIndex = all.findIndex(s => s.id === state.currentSongId);
         if (currentIndex > 0) {
             playSong(all[currentIndex - 1].id);
+        } else if (all.length > 0) {
+            playSong(all[all.length - 1].id);
         }
         return;
     }
@@ -551,31 +632,21 @@ function updateLyrics(song) {
 // ============================================================
 // ===== YOUTUBE PLAYER =====
 // ============================================================
-function onYouTubeIframeAPIReady() {
-    state.player = new YT.Player('player', {
-        height: '1',
-        width: '1',
-        playerVars: {
-            'autoplay': 0,
-            'controls': 0,
-            'disablekb': 1,
-            'modestbranding': 1,
-            'rel': 0,
-            'showinfo': 0,
-            'iv_load_policy': 3,
-            'fs': 0
-        },
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange,
-            'onError': onPlayerError
-        }
-    });
-}
-
 function onPlayerReady(event) {
     state.playerReady = true;
-    console.log('Player pronto!');
+    console.log('✅ Player pronto!');
+    
+    // Se havia uma música para tocar, tenta tocar novamente
+    if (state.currentSongId) {
+        const song = getSongById(state.currentSongId);
+        if (song) {
+            state.player.loadVideoById(state.currentSongId);
+            state.player.playVideo();
+            state.isPlaying = true;
+            document.getElementById('playBtn').textContent = '⏸';
+            document.getElementById('playBtn').title = 'Pausar';
+        }
+    }
 }
 
 function onPlayerStateChange(event) {
@@ -592,24 +663,39 @@ function onPlayerStateChange(event) {
         state.isPlaying = false;
         document.getElementById('playBtn').textContent = '▶️';
         document.getElementById('playBtn').title = 'Tocar';
-        nextSong();
+        // Toca a próxima música
+        setTimeout(nextSong, 1500);
+    } else if (event.data === YT.PlayerState.UNSTARTED) {
+        console.log('⏳ Vídeo não iniciado');
+    } else if (event.data === YT.PlayerState.BUFFERING) {
+        console.log('⏳ Carregando...');
     }
 }
 
 function onPlayerError(event) {
-    console.error('Erro no player:', event.data);
+    console.error('❌ Erro no player:', event.data);
+    
+    // Tenta tocar a próxima música em caso de erro
+    if (state.currentPlaylist) {
+        console.log('Tocando próxima música...');
+        nextSong();
+    }
 }
 
 function updateProgress() {
     if (state.player && state.playerReady && state.player.getCurrentTime) {
-        const duration = state.player.getDuration();
-        const currentTime = state.player.getCurrentTime();
-        
-        if (duration > 0) {
-            const progress = (currentTime / duration) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-            document.getElementById('currentTime').textContent = formatTime(currentTime);
-            document.getElementById('totalTime').textContent = formatTime(duration);
+        try {
+            const duration = state.player.getDuration();
+            const currentTime = state.player.getCurrentTime();
+            
+            if (duration > 0 && !isNaN(duration)) {
+                const progress = (currentTime / duration) * 100;
+                document.getElementById('progressFill').style.width = progress + '%';
+                document.getElementById('currentTime').textContent = formatTime(currentTime);
+                document.getElementById('totalTime').textContent = formatTime(duration);
+            }
+        } catch (error) {
+            // Ignora erros de atualização
         }
     }
     requestAnimationFrame(updateProgress);
@@ -748,36 +834,4 @@ function setupSearch() {
                     <div class="result-title">${song.title}</div>
                     <div class="result-artist">${song.artist || 'Desconhecido'}</div>
                 </div>
-                <button class="result-play" onclick="event.stopPropagation(); playSong('${song.id}')">▶️</button>
-            </div>
-        `).join('');
-    });
-    
-    clearBtn.addEventListener('click', () => {
-        input.value = '';
-        input.dispatchEvent(new Event('input'));
-        input.focus();
-    });
-}
-
-// ============================================================
-// ===== CONFIGURAÇÃO DE EVENTOS =====
-// ============================================================
-function setupEvents() {
-    setupLoginEvents();
-    setupNavigation();
-    setupPlayer();
-    setupSearch();
-}
-
-// ============================================================
-// ===== CARREGAR API DO YOUTUBE =====
-// ============================================================
-const tag = document.createElement('script');
-tag.src = 'https://www.youtube.com/iframe_api';
-const firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-console.log('🎵 Pobrefy carregado!');
-console.log('📌 Para ativar o login com Google, configure o Client ID em script.js');
-console.log('📌 As playlists padrão são: Ana Castela, Sertanejo e Funk');
+                <button class="result-play" onclick="event.stopPropagation(); playSong('
