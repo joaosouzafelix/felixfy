@@ -3,264 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pobrefy</title>
+    <title>Pobrefy - Sua Música</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="app-container">
-        <!-- ===== BARRA LATERAL ===== -->
-        <aside>
-            <div class="logo">Pobrefy</div>
-            
-            <nav>
-                <ul>
-                    <li>🏠 Início</li>
-                    <li>🔍 Buscar</li>
-                    <li>📚 Sua Biblioteca</li>
-                </ul>
-            </nav>
-            
-            <div class="playlist-section">
-                <h3>Playlists</h3>
-                <ul>
-                    <li>🎵 Minhas Músicas</li>
-                    <li>❤️ Favoritas</li>
-                    <li>💪 Treino</li>
-                    <li>🎸 Rock</li>
-                    <li>🎧 Eletrônica</li>
-                </ul>
+    <!-- ===== TELA DE LOGIN ===== -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-box">
+                <div class="login-header">
+                    <h1>🎵 Pobrefy</h1>
+                    <p>Escute suas músicas favoritas</p>
+                </div>
+
+                <!-- Formulário de Login -->
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <input type="email" id="loginEmail" placeholder="E-mail" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="loginPassword" placeholder="Senha" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Entrar</button>
+                </form>
+
+                <div class="login-divider">
+                    <span>ou</span>
+                </div>
+
+                <!-- Botão Google (preparado) -->
+                <button id="googleLoginBtn" class="btn-google">
+                    <svg viewBox="0 0 48 48" width="24" height="24">
+                        <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                        <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                        <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                        <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                    </svg>
+                    Entrar com Google
+                </button>
+
+                <div class="login-footer">
+                    <p>Não tem uma conta? <a href="#" id="showRegister">Criar conta</a></p>
+                </div>
             </div>
-        </aside>
 
-        <!-- ===== CONTEÚDO PRINCIPAL ===== -->
-        <main>
-            <header>
-                <h1 class="greeting">Boa tarde</h1>
-            </header>
-            
-            <section>
-                <h2 class="section-title">Playlists populares</h2>
-                
-                <div class="playlist-grid">
-                    <!-- Playlist 1 -->
-                    <div class="playlist-card">
-                        <span class="card-icon">🎶</span>
-                        <h3>Top Brasil</h3>
-                        <p>As músicas mais ouvidas</p>
-                        <div class="music-list">
-                            <div class="music-item" data-video="BngZJ-yORWw" data-title="Ponto Fraco">
-                                <span class="music-title">Ponto Fraco</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="qTVbdTffP5k" data-title="É Que Eu Não Te Esqueci">
-                                <span class="music-title">É Que Eu Não Te Esqueci</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="F3kqSn_BP50" data-title="Eu Não Vou Mudar">
-                                <span class="music-title">Eu Não Vou Mudar</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="tX7-EVaP_RY" data-title="Hoje Tem Rodeio">
-                                <span class="music-title">Hoje Tem Rodeio</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="_fqH6zYJ3DI" data-title="Vou Vender o Meu Chapéu">
-                                <span class="music-title">Vou Vender o Meu Chapéu</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="fIDdKiCL1lA" data-title="Não Depende Só De Mim">
-                                <span class="music-title">Não Depende Só De Mim</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="9O4RM1VNLuM" data-title="É Bom Demais">
-                                <span class="music-title">É Bom Demais</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="nmlSLqOvPHQ" data-title="Meu Erro">
-                                <span class="music-title">Meu Erro</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="kTSAECb8iIc" data-title="Rodeio Acabou">
-                                <span class="music-title">Rodeio Acabou</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="CKNjiHKiNvM" data-title="Agora Ou Nunca">
-                                <span class="music-title">Agora Ou Nunca</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="qlPKAzw6-dk" data-title="Simplesmente Acontece">
-                                <span class="music-title">Simplesmente Acontece</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Playlist 2 -->
-                    <div class="playlist-card">
-                        <span class="card-icon">🎤</span>
-                        <h3>Pop Hits</h3>
-                        <p>Sucessos do momento</p>
-                        <div class="music-list">
-                            <div class="music-item" data-video="Jpv9iR09sjc" data-title="Mamãe, Não Deixe Seu Filho Ser um Cowboy">
-                                <span class="music-title">Mamãe, Não Deixe Seu Filho Ser um Cowboy</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="4OK23Y-4xsE" data-title="Franguinho na Panela">
-                                <span class="music-title">Franguinho na Panela</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="CnY6xryxYDw" data-title="Hoje eu Lembrei de Você">
-                                <span class="music-title">Hoje eu Lembrei de Você</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="HxsxGqM3Sc0" data-title="Rédeas do Possante">
-                                <span class="music-title">Rédeas do Possante</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="Kw6X7Z1Qy4k" data-title="Romaria">
-                                <span class="music-title">Romaria</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="OZSpfBEdz8k" data-title="Vá com Deus">
-                                <span class="music-title">Vá com Deus</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="aPqYwUPyZN0" data-title="Você Vai Ver">
-                                <span class="music-title">Você Vai Ver</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="cZHlSHFeq7E" data-title="Se a casa Cair">
-                                <span class="music-title">Se a casa Cair</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="dNixkzO0jgI" data-title="Saudade é mato">
-                                <span class="music-title">Saudade é mato</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="jGbldS066tA" data-title="Barulho da Camioneta">
-                                <span class="music-title">Barulho da Camioneta</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Playlist 3 -->
-                    <div class="playlist-card">
-                        <span class="card-icon">🎸</span>
-                        <h3>Rock Clássico</h3>
-                        <p>Os maiores hits do rock</p>
-                        <div class="music-list">
-                            <div class="music-item" data-video="BngZJ-yORWw" data-title="Ponto Fraco">
-                                <span class="music-title">Ponto Fraco</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="qTVbdTffP5k" data-title="É Que Eu Não Te Esqueci">
-                                <span class="music-title">É Que Eu Não Te Esqueci</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="F3kqSn_BP50" data-title="Eu Não Vou Mudar">
-                                <span class="music-title">Eu Não Vou Mudar</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Playlist 4 -->
-                    <div class="playlist-card">
-                        <span class="card-icon">🎧</span>
-                        <h3>Eletrônica</h3>
-                        <p>As melhores batidas</p>
-                        <div class="music-list">
-                            <div class="music-item" data-video="CKNjiHKiNvM" data-title="Agora Ou Nunca">
-                                <span class="music-title">Agora Ou Nunca</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="tX7-EVaP_RY" data-title="Hoje Tem Rodeio">
-                                <span class="music-title">Hoje Tem Rodeio</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="_fqH6zYJ3DI" data-title="Vou Vender o Meu Chapéu">
-                                <span class="music-title">Vou Vender o Meu Chapéu</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Formulário de Cadastro -->
+            <div class="register-box" style="display: none;">
+                <div class="login-header">
+                    <h1>🎵 Pobrefy</h1>
+                    <p>Crie sua conta</p>
+                </div>
 
-                    <!-- Playlist 5 -->
-                    <div class="playlist-card">
-                        <span class="card-icon">🎷</span>
-                        <h3>Jazz & Blues</h3>
-                        <p>Música para relaxar</p>
-                        <div class="music-list">
-                            <div class="music-item" data-video="fIDdKiCL1lA" data-title="Não Depende Só De Mim">
-                                <span class="music-title">Não Depende Só De Mim</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="9O4RM1VNLuM" data-title="É Bom Demais">
-                                <span class="music-title">É Bom Demais</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="nmlSLqOvPHQ" data-title="Meu Erro">
-                                <span class="music-title">Meu Erro</span>
-                                <button class="play-music">▶️</button>
-                            </div>
+                <form id="registerForm" class="login-form">
+                    <div class="form-group">
+                        <input type="text" id="registerName" placeholder="Nome completo" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="registerEmail" placeholder="E-mail" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="registerPassword" placeholder="Senha" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="registerConfirmPassword" placeholder="Confirmar senha" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Criar conta</button>
+                </form>
+
+                <div class="login-footer">
+                    <p>Já tem uma conta? <a href="#" id="showLogin">Entrar</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== APLICATIVO PRINCIPAL ===== -->
+    <div id="app" style="display: none;">
+        <div class="app-container">
+            <!-- ===== MENU LATERAL ===== -->
+            <aside>
+                <div class="logo">🎵 Pobrefy</div>
+
+                <nav>
+                    <ul>
+                        <li class="active" data-page="home">🏠 Início</li>
+                        <li data-page="search">🔍 Buscar</li>
+                        <li data-page="library">📚 Sua Biblioteca</li>
+                    </ul>
+                </nav>
+
+                <div class="playlist-section">
+                    <h3>Playlists</h3>
+                    <ul id="sidebarPlaylists">
+                        <li data-playlist="ana-castela">🎤 Ana Castela</li>
+                        <li data-playlist="sertanejo">🎸 Sertanejo</li>
+                        <li data-playlist="funk">🎧 Funk</li>
+                        <li class="create-playlist-btn">➕ Criar playlist</li>
+                    </ul>
+                </div>
+
+                <div class="user-info">
+                    <span id="userNameDisplay">Usuário</span>
+                    <button id="logoutBtn" class="btn-logout">Sair</button>
+                </div>
+            </aside>
+
+            <!-- ===== CONTEÚDO PRINCIPAL ===== -->
+            <main id="mainContent">
+                <!-- Página Inicial -->
+                <div id="page-home" class="page-content active">
+                    <header>
+                        <h1 class="greeting" id="greetingMessage">Boa tarde!</h1>
+                        <p class="greeting-sub">O que você quer ouvir hoje?</p>
+                    </header>
+
+                    <section>
+                        <h2 class="section-title">Suas playlists</h2>
+                        <div class="playlist-grid" id="homePlaylists">
+                            <!-- Playlists serão inseridas pelo JavaScript -->
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Página de Busca -->
+                <div id="page-search" class="page-content">
+                    <header>
+                        <h1 class="section-title">Buscar músicas</h1>
+                    </header>
+
+                    <div class="search-container">
+                        <div class="search-bar">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="searchInput" placeholder="Digite o nome da música, artista ou álbum..." class="search-input">
+                            <button id="clearSearch" class="clear-search">✕</button>
+                        </div>
+                        <div id="searchResults" class="search-results">
+                            <!-- Resultados da pesquisa -->
                         </div>
                     </div>
+                </div>
 
-                    <!-- Playlist 6 -->
-                    <div class="playlist-card">
-                        <span class="card-icon">🎹</span>
-                        <h3>MPB</h3>
-                        <p>Música popular brasileira</p>
-                        <div class="music-list">
-                            <div class="music-item" data-video="qlPKAzw6-dk" data-title="Simplesmente Acontece">
-                                <span class="music-title">Simplesmente Acontece</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="Jpv9iR09sjc" data-title="Mamãe, Não Deixe Seu Filho Ser um Cowboy">
-                                <span class="music-title">Mamãe, Não Deixe Seu Filho Ser um Cowboy</span>
-                                <button class="play-music">▶️</button>
-                            </div>
-                            <div class="music-item" data-video="4OK23Y-4xsE" data-title="Franguinho na Panela">
-                                <span class="music-title">Franguinho na Panela</span>
-                                <button class="play-music">▶️</button>
+                <!-- Página da Biblioteca -->
+                <div id="page-library" class="page-content">
+                    <header>
+                        <h1 class="section-title">Sua Biblioteca</h1>
+                    </header>
+
+                    <div id="libraryContent">
+                        <div class="library-section">
+                            <h3>Playlists</h3>
+                            <div id="libraryPlaylists" class="playlist-grid">
+                                <!-- Playlists da biblioteca -->
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-        </main>
-    </div>
 
-    <!-- ===== PLAYER / RODAPÉ ===== -->
-    <footer>
-        <div class="player-info">
-            <span class="status-indicator">▶️</span>
-            Música atual: <span class="current-song">Nenhuma</span>
-        </div>
-        
-        <div class="player-controls">
-            <button class="control-btn" id="prevBtn" aria-label="Anterior" title="Anterior">⏮</button>
-            <button class="control-btn play-btn" id="playBtn" aria-label="Tocar" title="Tocar">▶️</button>
-            <button class="control-btn" id="nextBtn" aria-label="Próxima" title="Próxima">⏭</button>
+                <!-- Página da Playlist -->
+                <div id="page-playlist" class="page-content" style="display: none;">
+                    <button id="backFromPlaylist" class="back-btn">← Voltar</button>
+                    <div id="playlistDetail">
+                        <!-- Detalhes da playlist -->
+                    </div>
+                </div>
+            </main>
         </div>
 
-        <div class="player-volume">
-            <span>🔊</span>
-            <div class="volume-bar">
-                <div class="volume-progress" style="width: 70%"></div>
+        <!-- ===== PLAYER ===== -->
+        <footer id="player">
+            <div class="player-left">
+                <div class="player-artwork" id="playerArtwork">
+                    <span>🎵</span>
+                </div>
+                <div class="player-info">
+                    <span class="player-song" id="playerSong">Nenhuma música</span>
+                    <span class="player-artist" id="playerArtist">-</span>
+                </div>
+                <button id="toggleLyrics" class="lyrics-btn">📝</button>
+            </div>
+
+            <div class="player-center">
+                <div class="player-controls">
+                    <button id="prevBtn" class="control-btn" title="Anterior">⏮</button>
+                    <button id="playBtn" class="control-btn play-btn" title="Tocar">▶️</button>
+                    <button id="nextBtn" class="control-btn" title="Próxima">⏭</button>
+                </div>
+                <div class="player-progress">
+                    <span class="player-time" id="currentTime">0:00</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                    <span class="player-time" id="totalTime">0:00</span>
+                </div>
+            </div>
+
+            <div class="player-right">
+                <div class="player-volume">
+                    <span>🔊</span>
+                    <div class="volume-bar">
+                        <div class="volume-progress" id="volumeProgress" style="width: 70%"></div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- ===== LETRAS ===== -->
+        <div id="lyricsPanel" class="lyrics-panel" style="display: none;">
+            <div class="lyrics-header">
+                <h3 id="lyricsTitle">Letra da música</h3>
+                <button id="closeLyrics" class="close-lyrics">✕</button>
+            </div>
+            <div class="lyrics-content" id="lyricsContent">
+                <p class="lyrics-placeholder">Letra não disponível para esta música.</p>
             </div>
         </div>
-        
-        <div class="progress-bar">
-            <div class="progress-fill" style="width: 30%"></div>
-        </div>
-    </footer>
 
-    <!-- ===== PLAYER FLUTUANTE (YouTube) ===== -->
-    <div id="player-container">
-        <div id="player"></div>
+        <!-- ===== PLAYER OCULTO (YouTube) ===== -->
+        <div id="player-container">
+            <div id="player"></div>
+        </div>
     </div>
 
     <script src="script.js"></script>
