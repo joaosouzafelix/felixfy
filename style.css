@@ -1,5 +1,5 @@
 /* ============================================================
-   RESET E BASE
+   RESET E BASE - ESTILO SPOTIFY
    ============================================================ */
 * {
     margin: 0;
@@ -8,29 +8,28 @@
 }
 
 :root {
-    --bg-primary: #121212;
-    --bg-secondary: #000000;
-    --bg-card: #181818;
-    --bg-card-hover: #282828;
-    --bg-footer: #181818;
-    --bg-input: #2a2a2a;
-    --text-primary: #ffffff;
-    --text-secondary: #b3b3b3;
-    --text-muted: #6a6a6a;
-    --green-primary: #1ed760;
-    --green-hover: #1fdf64;
-    --border-color: #282828;
-    --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-    --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.7);
-    --radius: 8px;
-    --radius-full: 9999px;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --spotify-green: #1ed760;
+    --spotify-green-hover: #1fdf64;
+    --spotify-black: #000000;
+    --spotify-dark: #121212;
+    --spotify-dark-hover: #1f1f1f;
+    --spotify-gray: #181818;
+    --spotify-gray-hover: #282828;
+    --spotify-light-gray: #b3b3b3;
+    --spotify-white: #ffffff;
+    --spotify-text-muted: #6a6a6a;
+    --spotify-border: #282828;
+    --spotify-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    --spotify-radius: 8px;
+    --spotify-radius-full: 9999px;
+    --spotify-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --spotify-font: 'Circular', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
-    font-family: 'Circular', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
+    font-family: var(--spotify-font);
+    background-color: var(--spotify-dark);
+    color: var(--spotify-white);
     height: 100vh;
     overflow: hidden;
     display: flex;
@@ -38,10 +37,10 @@ body {
 }
 
 /* ============================================================
-   SCROLLBAR PERSONALIZADA
+   SCROLLBAR - ESTILO SPOTIFY
    ============================================================ */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 12px;
 }
 
 ::-webkit-scrollbar-track {
@@ -49,17 +48,17 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--text-muted);
+    background: var(--spotify-light-gray);
     border-radius: 6px;
-    border: 2px solid var(--bg-primary);
+    border: 3px solid var(--spotify-dark);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--text-secondary);
+    background: var(--spotify-white);
 }
 
 /* ============================================================
-   TELA DE LOGIN
+   TELA DE LOGIN - ESTILO SPOTIFY
    ============================================================ */
 .login-screen {
     position: fixed;
@@ -72,18 +71,6 @@ body {
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
 }
 
 .login-container {
@@ -94,23 +81,10 @@ body {
 
 .login-box,
 .register-box {
-    background: var(--bg-card);
-    border-radius: 12px;
+    background: var(--spotify-gray);
+    border-radius: var(--spotify-radius);
     padding: 40px 36px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border-color);
-    animation: slideUp 0.4s ease;
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    box-shadow: var(--spotify-shadow);
 }
 
 .login-header {
@@ -120,14 +94,18 @@ body {
 
 .login-header h1 {
     font-size: 32px;
-    color: var(--green-primary);
+    color: var(--spotify-white);
     margin-bottom: 8px;
     font-weight: 700;
     letter-spacing: -0.5px;
 }
 
+.login-header h1 .highlight {
+    color: var(--spotify-green);
+}
+
 .login-header p {
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     font-size: 14px;
 }
 
@@ -140,41 +118,39 @@ body {
 .form-group input {
     width: 100%;
     padding: 14px 16px;
-    background: var(--bg-input);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    color: var(--text-primary);
+    background: var(--spotify-dark);
+    border: 1px solid var(--spotify-border);
+    border-radius: var(--spotify-radius);
+    color: var(--spotify-white);
     font-size: 14px;
-    transition: var(--transition);
+    transition: var(--spotify-transition);
 }
 
 .form-group input:focus {
     outline: none;
-    border-color: var(--green-primary);
-    box-shadow: 0 0 0 3px rgba(30, 215, 96, 0.15);
+    border-color: var(--spotify-green);
 }
 
 .form-group input::placeholder {
-    color: var(--text-muted);
+    color: var(--spotify-text-muted);
 }
 
 .btn-primary {
     width: 100%;
     padding: 14px;
-    background: var(--green-primary);
+    background: var(--spotify-green);
     color: #000000;
     border: none;
-    border-radius: var(--radius-full);
+    border-radius: var(--spotify-radius-full);
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
-    transition: var(--transition);
+    transition: var(--spotify-transition);
 }
 
 .btn-primary:hover {
-    background: var(--green-hover);
+    background: var(--spotify-green-hover);
     transform: scale(1.02);
-    box-shadow: 0 4px 16px rgba(30, 215, 96, 0.3);
 }
 
 .btn-primary:active {
@@ -185,7 +161,7 @@ body {
     display: flex;
     align-items: center;
     margin: 20px 0;
-    color: var(--text-muted);
+    color: var(--spotify-text-muted);
     font-size: 12px;
 }
 
@@ -194,14 +170,13 @@ body {
     content: '';
     flex: 1;
     height: 1px;
-    background: var(--border-color);
+    background: var(--spotify-border);
 }
 
 .login-divider span {
     padding: 0 16px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: var(--text-muted);
 }
 
 .btn-google {
@@ -209,8 +184,8 @@ body {
     padding: 12px;
     background: #ffffff;
     color: #000000;
-    border: 1px solid #e0e0e0;
-    border-radius: var(--radius-full);
+    border: none;
+    border-radius: var(--spotify-radius-full);
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
@@ -218,13 +193,12 @@ body {
     align-items: center;
     justify-content: center;
     gap: 12px;
-    transition: var(--transition);
+    transition: var(--spotify-transition);
 }
 
 .btn-google:hover {
-    background: #f5f5f5;
     transform: scale(1.02);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .btn-google:active {
@@ -234,24 +208,23 @@ body {
 .login-footer {
     text-align: center;
     margin-top: 20px;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     font-size: 14px;
 }
 
 .login-footer a {
-    color: var(--green-primary);
+    color: var(--spotify-white);
     text-decoration: none;
     font-weight: 600;
-    transition: var(--transition);
 }
 
 .login-footer a:hover {
     text-decoration: underline;
-    color: var(--green-hover);
+    color: var(--spotify-green);
 }
 
 /* ============================================================
-   LAYOUT PRINCIPAL
+   LAYOUT PRINCIPAL - ESTILO SPOTIFY
    ============================================================ */
 #app {
     display: none;
@@ -266,66 +239,67 @@ body {
 }
 
 /* ============================================================
-   MENU LATERAL
+   BARRA LATERAL - ESTILO SPOTIFY
    ============================================================ */
 aside {
     width: 240px;
-    background-color: var(--bg-secondary);
+    background-color: var(--spotify-black);
     padding: 24px 12px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
     flex-shrink: 0;
     overflow-y: auto;
-}
-
-aside::-webkit-scrollbar {
-    width: 4px;
-}
-
-aside::-webkit-scrollbar-thumb {
-    background: var(--text-muted);
-    border-radius: 2px;
-    border: none;
 }
 
 .logo {
     font-size: 24px;
     font-weight: 700;
-    color: var(--green-primary);
+    color: var(--spotify-white);
     padding-left: 12px;
     margin-bottom: 4px;
     letter-spacing: -0.5px;
 }
 
+.logo .green {
+    color: var(--spotify-green);
+}
+
+/* Navegação */
 nav ul {
     list-style: none;
 }
 
 nav ul li {
     padding: 10px 12px;
-    border-radius: var(--radius);
+    border-radius: var(--spotify-radius);
     font-size: 14px;
     font-weight: 500;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     cursor: pointer;
-    transition: var(--transition);
+    transition: var(--spotify-transition);
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
 }
 
 nav ul li:hover {
-    color: var(--text-primary);
-    background-color: var(--bg-card-hover);
+    color: var(--spotify-white);
+    background-color: var(--spotify-gray-hover);
 }
 
 nav ul li.active {
-    color: var(--text-primary);
-    background-color: var(--bg-card-hover);
+    color: var(--spotify-white);
+    background-color: var(--spotify-gray-hover);
 }
 
-/* Playlist Section */
+nav ul li .nav-icon {
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+}
+
+/* Playlists Section */
 .playlist-section {
     flex: 1;
     overflow-y: auto;
@@ -335,7 +309,7 @@ nav ul li.active {
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 1.2px;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     padding: 0 12px 8px 12px;
     font-weight: 700;
 }
@@ -346,43 +320,44 @@ nav ul li.active {
 
 .playlist-section ul li {
     padding: 8px 12px;
-    border-radius: var(--radius);
+    border-radius: var(--spotify-radius);
     font-size: 13px;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     cursor: pointer;
-    transition: var(--transition);
+    transition: var(--spotify-transition);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .playlist-section ul li:hover {
-    color: var(--text-primary);
-    background-color: var(--bg-card-hover);
+    color: var(--spotify-white);
+    background-color: var(--spotify-gray-hover);
 }
 
 .playlist-section ul li .playlist-badge {
     font-size: 10px;
-    background: var(--bg-card-hover);
+    background: var(--spotify-gray-hover);
     padding: 1px 8px;
     border-radius: 12px;
-    color: var(--text-muted);
+    color: var(--spotify-text-muted);
     margin-left: auto;
 }
 
 .create-playlist-btn {
-    color: var(--green-primary) !important;
+    color: var(--spotify-light-gray) !important;
     font-weight: 600;
 }
 
 .create-playlist-btn:hover {
-    background-color: rgba(30, 215, 96, 0.1) !important;
+    color: var(--spotify-white) !important;
+    background-color: var(--spotify-gray-hover) !important;
 }
 
 /* User Info */
 .user-info {
     padding: 12px;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--spotify-border);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -391,7 +366,7 @@ nav ul li.active {
 
 .user-info span {
     font-size: 13px;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -399,35 +374,33 @@ nav ul li.active {
 
 .btn-logout {
     background: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--text-secondary);
+    border: 1px solid var(--spotify-border);
+    color: var(--spotify-light-gray);
     padding: 4px 12px;
-    border-radius: var(--radius-full);
+    border-radius: var(--spotify-radius-full);
     cursor: pointer;
     font-size: 12px;
-    transition: var(--transition);
+    transition: var(--spotify-transition);
     flex-shrink: 0;
 }
 
 .btn-logout:hover {
-    color: var(--text-primary);
-    border-color: var(--text-secondary);
-    background: rgba(255, 255, 255, 0.05);
+    color: var(--spotify-white);
+    border-color: var(--spotify-light-gray);
 }
 
 /* ============================================================
-   CONTEÚDO PRINCIPAL
+   CONTEÚDO PRINCIPAL - ESTILO SPOTIFY
    ============================================================ */
 main {
     flex: 1;
     padding: 24px 32px 32px 32px;
     overflow-y: auto;
-    background: linear-gradient(to bottom, #1f1f1f, var(--bg-primary) 200px);
+    background: linear-gradient(to bottom, #1f1f1f, var(--spotify-dark) 300px);
 }
 
 .page-content {
     display: none;
-    animation: fadeIn 0.3s ease;
 }
 
 .page-content.active {
@@ -435,7 +408,7 @@ main {
 }
 
 /* ============================================================
-   SAUDAÇÃO
+   SAUDAÇÃO - ESTILO SPOTIFY
    ============================================================ */
 .greeting {
     font-size: 32px;
@@ -446,13 +419,10 @@ main {
 
 .greeting-sub {
     font-size: 18px;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     margin-bottom: 28px;
 }
 
-/* ============================================================
-   TÍTULOS
-   ============================================================ */
 .section-title {
     font-size: 22px;
     font-weight: 700;
@@ -461,37 +431,35 @@ main {
 }
 
 /* ============================================================
-   PLAYLIST GRID
+   PLAYLIST GRID - ESTILO SPOTIFY
    ============================================================ */
 .playlist-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 20px;
     margin-bottom: 20px;
 }
 
 /* ============================================================
-   PLAYLIST CARD
+   PLAYLIST CARD - ESTILO SPOTIFY
    ============================================================ */
 .playlist-card {
-    background-color: var(--bg-card);
+    background-color: var(--spotify-gray);
     padding: 16px;
-    border-radius: var(--radius);
-    transition: var(--transition);
+    border-radius: var(--spotify-radius);
+    transition: var(--spotify-transition);
     cursor: pointer;
     position: relative;
 }
 
 .playlist-card:hover {
-    background-color: var(--bg-card-hover);
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-hover);
+    background-color: var(--spotify-gray-hover);
 }
 
 .playlist-card .card-artwork {
     width: 100%;
     aspect-ratio: 1;
-    border-radius: var(--radius);
+    border-radius: var(--spotify-radius);
     background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
     display: flex;
     align-items: center;
@@ -500,24 +468,21 @@ main {
     margin-bottom: 12px;
     overflow: hidden;
     position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .playlist-card .card-artwork img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: var(--transition);
 }
 
-.playlist-card:hover .card-artwork img {
-    transform: scale(1.05);
-}
-
+/* Botão Play sobre a capa - ESTILO SPOTIFY */
 .playlist-card .card-artwork .play-overlay {
     position: absolute;
     bottom: 8px;
     right: 8px;
-    background: var(--green-primary);
+    background: var(--spotify-green);
     color: #000000;
     width: 40px;
     height: 40px;
@@ -527,57 +492,50 @@ main {
     justify-content: center;
     font-size: 18px;
     opacity: 0;
-    transform: translateY(8px);
-    transition: var(--transition);
-    box-shadow: var(--shadow);
+    transform: translateY(8px) scale(0.8);
+    transition: var(--spotify-transition);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .playlist-card:hover .play-overlay {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
 .playlist-card h3 {
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 4px;
-    color: var(--text-primary);
+    color: var(--spotify-white);
 }
 
 .playlist-card p {
     font-size: 14px;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     font-weight: 400;
 }
 
 .playlist-card .play-btn-card {
     margin-top: 8px;
     padding: 6px 16px;
-    background: var(--green-primary);
+    background: var(--spotify-green);
     color: #000000;
     border: none;
-    border-radius: var(--radius-full);
+    border-radius: var(--spotify-radius-full);
     font-weight: 600;
     font-size: 13px;
     cursor: pointer;
-    transition: var(--transition);
+    transition: var(--spotify-transition);
     width: 100%;
 }
 
 .playlist-card .play-btn-card:hover {
-    background: var(--green-hover);
+    background: var(--spotify-green-hover);
     transform: scale(1.02);
 }
 
-.playlist-card .playlist-badge-custom {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 4px;
-    display: block;
-}
-
 /* ============================================================
-   PESQUISA
+   PESQUISA - ESTILO SPOTIFY
    ============================================================ */
 .search-container {
     max-width: 800px;
@@ -587,21 +545,20 @@ main {
 .search-bar {
     display: flex;
     align-items: center;
-    background: var(--bg-input);
-    border-radius: var(--radius-full);
+    background: var(--spotify-dark);
+    border-radius: var(--spotify-radius-full);
     padding: 4px 20px;
-    border: 1px solid var(--border-color);
-    transition: var(--transition);
+    border: 1px solid var(--spotify-border);
+    transition: var(--spotify-transition);
 }
 
 .search-bar:focus-within {
-    border-color: var(--green-primary);
-    box-shadow: 0 0 0 3px rgba(30, 215, 96, 0.15);
+    border-color: var(--spotify-green);
 }
 
 .search-icon {
     font-size: 18px;
-    color: var(--text-muted);
+    color: var(--spotify-text-muted);
     margin-right: 12px;
 }
 
@@ -610,24 +567,23 @@ main {
     padding: 14px 0;
     background: transparent;
     border: none;
-    color: var(--text-primary);
+    color: var(--spotify-white);
     font-size: 16px;
     outline: none;
 }
 
 .search-input::placeholder {
-    color: var(--text-muted);
+    color: var(--spotify-text-muted);
 }
 
 .clear-search {
     background: transparent;
     border: none;
-    color: var(--text-muted);
+    color: var(--spotify-text-muted);
     font-size: 18px;
     cursor: pointer;
     padding: 8px;
     display: none;
-    transition: var(--transition);
 }
 
 .clear-search.visible {
@@ -635,7 +591,7 @@ main {
 }
 
 .clear-search:hover {
-    color: var(--text-primary);
+    color: var(--spotify-white);
 }
 
 .search-results {
@@ -647,22 +603,22 @@ main {
     align-items: center;
     gap: 16px;
     padding: 12px 16px;
-    background: var(--bg-card);
-    border-radius: var(--radius);
+    background: var(--spotify-gray);
+    border-radius: var(--spotify-radius);
     margin-bottom: 8px;
-    transition: var(--transition);
+    transition: var(--spotify-transition);
     cursor: pointer;
 }
 
 .search-result-item:hover {
-    background: var(--bg-card-hover);
+    background: var(--spotify-gray-hover);
 }
 
 .search-result-item .result-artwork {
     width: 50px;
     height: 50px;
-    border-radius: var(--radius);
-    background: var(--bg-input);
+    border-radius: var(--spotify-radius);
+    background: var(--spotify-dark);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -685,58 +641,55 @@ main {
 .search-result-item .result-info .result-title {
     font-size: 14px;
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--spotify-white);
 }
 
 .search-result-item .result-info .result-artist {
     font-size: 13px;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
 }
 
 .search-result-item .result-play {
     padding: 6px 14px;
-    background: var(--green-primary);
+    background: var(--spotify-green);
     color: #000000;
     border: none;
-    border-radius: var(--radius-full);
+    border-radius: var(--spotify-radius-full);
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
-    transition: var(--transition);
+    transition: var(--spotify-transition);
     flex-shrink: 0;
 }
 
 .search-result-item .result-play:hover {
-    background: var(--green-hover);
+    background: var(--spotify-green-hover);
     transform: scale(1.05);
 }
 
 .no-results {
     text-align: center;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     padding: 40px 0;
     font-size: 16px;
 }
 
 /* ============================================================
-   DETALHE DA PLAYLIST
+   DETALHE DA PLAYLIST - ESTILO SPOTIFY
    ============================================================ */
 .back-btn {
     background: transparent;
     border: none;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     font-size: 14px;
     cursor: pointer;
     padding: 8px 0;
     margin-bottom: 16px;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    transition: var(--spotify-transition);
 }
 
 .back-btn:hover {
-    color: var(--text-primary);
+    color: var(--spotify-white);
 }
 
 .playlist-detail-header {
@@ -744,15 +697,14 @@ main {
     gap: 24px;
     margin-bottom: 24px;
     padding: 24px;
-    background: var(--bg-card);
-    border-radius: var(--radius);
-    flex-wrap: wrap;
+    background: var(--spotify-gray);
+    border-radius: var(--spotify-radius);
 }
 
 .playlist-detail-header .detail-artwork {
     width: 150px;
     height: 150px;
-    border-radius: var(--radius);
+    border-radius: var(--spotify-radius);
     background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
     display: flex;
     align-items: center;
@@ -760,6 +712,7 @@ main {
     font-size: 64px;
     flex-shrink: 0;
     overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .playlist-detail-header .detail-artwork img {
@@ -772,14 +725,12 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    flex: 1;
-    min-width: 200px;
 }
 
 .playlist-detail-header .detail-info .detail-type {
     font-size: 12px;
     text-transform: uppercase;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     letter-spacing: 1px;
 }
 
@@ -790,57 +741,53 @@ main {
 }
 
 .playlist-detail-header .detail-info .detail-description {
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     font-size: 14px;
-}
-
-.playlist-detail-header .detail-info .detail-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 12px;
-    flex-wrap: wrap;
 }
 
 .playlist-detail-header .detail-info .detail-play-all {
+    margin-top: 12px;
     padding: 10px 24px;
-    background: var(--green-primary);
+    background: var(--spotify-green);
     color: #000000;
     border: none;
-    border-radius: var(--radius-full);
+    border-radius: var(--spotify-radius-full);
     font-weight: 700;
     font-size: 14px;
     cursor: pointer;
-    transition: var(--transition);
+    transition: var(--spotify-transition);
+    width: fit-content;
 }
 
 .playlist-detail-header .detail-info .detail-play-all:hover {
-    background: var(--green-hover);
-    transform: scale(1.05);
+    background: var(--spotify-green-hover);
+    transform: scale(1.02);
 }
 
 .playlist-detail-header .detail-info .detail-delete {
-    padding: 10px 24px;
+    margin-top: 8px;
+    padding: 8px 20px;
     background: transparent;
     color: #ff4444;
     border: 1px solid #ff4444;
-    border-radius: var(--radius-full);
+    border-radius: var(--spotify-radius-full);
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13px;
     cursor: pointer;
-    transition: var(--transition);
+    transition: var(--spotify-transition);
+    width: fit-content;
 }
 
 .playlist-detail-header .detail-info .detail-delete:hover {
     background: #ff4444;
     color: #ffffff;
-    transform: scale(1.05);
 }
 
-/* Playlist Tracks */
+/* Playlist Tracks - ESTILO SPOTIFY */
 .playlist-tracks {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
 }
 
 .playlist-track {
@@ -848,17 +795,17 @@ main {
     align-items: center;
     gap: 16px;
     padding: 10px 16px;
-    border-radius: var(--radius);
-    transition: var(--transition);
+    border-radius: var(--spotify-radius);
+    transition: var(--spotify-transition);
     cursor: pointer;
 }
 
 .playlist-track:hover {
-    background: var(--bg-card-hover);
+    background: var(--spotify-gray-hover);
 }
 
 .playlist-track .track-number {
-    color: var(--text-muted);
+    color: var(--spotify-text-muted);
     font-size: 14px;
     min-width: 24px;
     text-align: center;
@@ -867,8 +814,8 @@ main {
 .playlist-track .track-artwork {
     width: 40px;
     height: 40px;
-    border-radius: var(--radius);
-    background: var(--bg-input);
+    border-radius: var(--spotify-radius);
+    background: var(--spotify-dark);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -891,16 +838,16 @@ main {
 .playlist-track .track-info .track-title {
     font-size: 14px;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--spotify-white);
 }
 
 .playlist-track .track-info .track-artist {
     font-size: 13px;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
 }
 
 .playlist-track .track-duration {
-    color: var(--text-muted);
+    color: var(--spotify-text-muted);
     font-size: 13px;
 }
 
@@ -908,30 +855,30 @@ main {
     padding: 4px 12px;
     background: transparent;
     border: none;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     font-size: 16px;
     cursor: pointer;
-    transition: var(--transition);
-    border-radius: var(--radius);
+    transition: var(--spotify-transition);
+    border-radius: var(--spotify-radius);
 }
 
 .playlist-track .track-play:hover {
-    color: var(--green-primary);
+    color: var(--spotify-green);
     background: rgba(30, 215, 96, 0.1);
 }
 
 /* ============================================================
-   PLAYER
+   PLAYER - ESTILO SPOTIFY
    ============================================================ */
 footer#player {
-    background-color: var(--bg-footer);
-    border-top: 1px solid var(--border-color);
+    background-color: var(--spotify-gray);
+    border-top: 1px solid var(--spotify-border);
     padding: 12px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0;
-    height: 80px;
+    height: 90px;
     position: relative;
     z-index: 50;
 }
@@ -941,20 +888,20 @@ footer#player {
     align-items: center;
     gap: 12px;
     min-width: 200px;
-    flex: 1;
 }
 
 .player-artwork {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius);
-    background: var(--bg-input);
+    width: 56px;
+    height: 56px;
+    border-radius: var(--spotify-radius);
+    background: var(--spotify-dark);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 28px;
     flex-shrink: 0;
     overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .player-artwork img {
@@ -972,7 +919,7 @@ footer#player {
 .player-song {
     font-size: 14px;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--spotify-white);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -980,7 +927,7 @@ footer#player {
 
 .player-artist {
     font-size: 12px;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -989,22 +936,16 @@ footer#player {
 .lyrics-btn {
     background: transparent;
     border: none;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     font-size: 18px;
     cursor: pointer;
     padding: 4px 8px;
-    border-radius: var(--radius);
-    transition: var(--transition);
-    flex-shrink: 0;
+    border-radius: var(--spotify-radius);
+    transition: var(--spotify-transition);
 }
 
 .lyrics-btn:hover {
-    color: var(--green-primary);
-    background: rgba(30, 215, 96, 0.1);
-}
-
-.lyrics-btn.active {
-    color: var(--green-primary);
+    color: var(--spotify-green);
 }
 
 .player-center {
@@ -1013,30 +954,29 @@ footer#player {
     align-items: center;
     flex: 1;
     max-width: 600px;
-    gap: 4px;
+    gap: 6px;
 }
 
 .player-controls {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
 }
 
 .control-btn {
     cursor: pointer;
     opacity: 0.7;
-    transition: var(--transition);
+    transition: var(--spotify-transition);
     padding: 6px 10px;
     border-radius: 50%;
     background: transparent;
     border: none;
-    color: var(--text-primary);
+    color: var(--spotify-white);
     font-size: 18px;
 }
 
 .control-btn:hover {
     opacity: 1;
-    background-color: var(--bg-card-hover);
 }
 
 .control-btn:active {
@@ -1044,7 +984,7 @@ footer#player {
 }
 
 .play-btn {
-    background-color: var(--green-primary);
+    background-color: var(--spotify-white);
     color: #000000;
     border-radius: 50%;
     padding: 8px 12px;
@@ -1053,8 +993,9 @@ footer#player {
 }
 
 .play-btn:hover {
-    background-color: var(--green-hover);
+    background-color: var(--spotify-white);
     transform: scale(1.05);
+    opacity: 1;
 }
 
 .player-progress {
@@ -1066,7 +1007,7 @@ footer#player {
 
 .player-time {
     font-size: 11px;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     min-width: 40px;
     text-align: center;
 }
@@ -1074,7 +1015,7 @@ footer#player {
 .progress-bar {
     flex: 1;
     height: 4px;
-    background-color: var(--text-muted);
+    background-color: var(--spotify-text-muted);
     border-radius: 2px;
     cursor: pointer;
     position: relative;
@@ -1087,14 +1028,14 @@ footer#player {
 
 .progress-fill {
     height: 100%;
-    background: var(--green-primary);
+    background: var(--spotify-white);
     border-radius: 2px;
     transition: width 0.1s linear;
     position: relative;
 }
 
 .progress-bar:hover .progress-fill {
-    background-color: var(--green-hover);
+    background: var(--spotify-green);
 }
 
 .progress-bar:hover .progress-fill::after {
@@ -1104,16 +1045,15 @@ footer#player {
     top: -4px;
     width: 14px;
     height: 14px;
-    background: var(--text-primary);
+    background: var(--spotify-white);
     border-radius: 50%;
-    box-shadow: var(--shadow);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .player-right {
     display: flex;
     align-items: center;
     min-width: 120px;
-    flex: 1;
     justify-content: flex-end;
 }
 
@@ -1133,7 +1073,7 @@ footer#player {
 .volume-bar {
     flex: 1;
     height: 4px;
-    background-color: var(--text-muted);
+    background-color: var(--spotify-text-muted);
     border-radius: 2px;
     cursor: pointer;
     position: relative;
@@ -1146,17 +1086,17 @@ footer#player {
 
 .volume-progress {
     height: 100%;
-    background-color: var(--green-primary);
+    background-color: var(--spotify-white);
     border-radius: 2px;
     transition: width 0.2s;
 }
 
 .volume-bar:hover .volume-progress {
-    background-color: var(--green-hover);
+    background-color: var(--spotify-green);
 }
 
 /* ============================================================
-   LETRAS
+   LETRAS - ESTILO SPOTIFY
    ============================================================ */
 .lyrics-panel {
     position: fixed;
@@ -1164,13 +1104,13 @@ footer#player {
     top: 0;
     width: 400px;
     height: 100%;
-    background: var(--bg-card);
-    border-left: 1px solid var(--border-color);
+    background: var(--spotify-gray);
+    border-left: 1px solid var(--spotify-border);
     padding: 24px;
     overflow-y: auto;
     z-index: 100;
     animation: slideInRight 0.3s ease;
-    box-shadow: var(--shadow);
+    box-shadow: var(--spotify-shadow);
 }
 
 @keyframes slideInRight {
@@ -1182,48 +1122,39 @@ footer#player {
     }
 }
 
-.lyrics-panel::-webkit-scrollbar {
-    width: 6px;
-}
-
-.lyrics-panel::-webkit-scrollbar-thumb {
-    background: var(--text-muted);
-    border-radius: 3px;
-}
-
 .lyrics-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
     padding-bottom: 12px;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--spotify-border);
 }
 
 .lyrics-header h3 {
     font-size: 18px;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--spotify-white);
 }
 
 .close-lyrics {
     background: transparent;
     border: none;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     font-size: 20px;
     cursor: pointer;
     padding: 4px 8px;
-    border-radius: var(--radius);
-    transition: var(--transition);
+    border-radius: var(--spotify-radius);
+    transition: var(--spotify-transition);
 }
 
 .close-lyrics:hover {
-    color: var(--text-primary);
-    background: var(--bg-card-hover);
+    color: var(--spotify-white);
+    background: var(--spotify-gray-hover);
 }
 
 .lyrics-content {
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     font-size: 15px;
     line-height: 1.8;
 }
@@ -1232,20 +1163,20 @@ footer#player {
     font-family: inherit;
     white-space: pre-wrap;
     word-wrap: break-word;
-    color: var(--text-secondary);
+    color: var(--spotify-light-gray);
     font-size: 15px;
     line-height: 1.8;
 }
 
 .lyrics-placeholder {
-    color: var(--text-muted);
+    color: var(--spotify-text-muted);
     text-align: center;
     padding: 60px 0;
     font-size: 16px;
 }
 
 /* ============================================================
-   PLAYER OCULTO (YouTube)
+   PLAYER OCULTO - ESTILO SPOTIFY
    ============================================================ */
 #player-container {
     position: fixed;
@@ -1264,7 +1195,7 @@ footer#player {
 }
 
 /* ============================================================
-   ANIMAÇÕES
+   ANIMAÇÕES - ESTILO SPOTIFY
    ============================================================ */
 @keyframes pulse {
     0%,
@@ -1290,37 +1221,13 @@ footer#player {
 }
 
 /* ============================================================
-   BOTÃO POBREFY
-   ============================================================ */
-.btn-pobrefy {
-    background-color: var(--green-primary);
-    color: #000000;
-    border: none;
-    padding: 8px 24px;
-    border-radius: var(--radius-full);
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.btn-pobrefy:hover {
-    background-color: var(--green-hover);
-    transform: scale(1.04);
-}
-
-.btn-pobrefy:active {
-    transform: scale(0.96);
-}
-
-/* ============================================================
-   RESPONSIVIDADE
+   RESPONSIVIDADE - ESTILO SPOTIFY
    ============================================================ */
 
 /* Tablets */
 @media (max-width: 1024px) {
     .playlist-grid {
-        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     }
 
     .playlist-detail-header {
@@ -1329,30 +1236,25 @@ footer#player {
         text-align: center;
     }
 
-    .playlist-detail-header .detail-info .detail-actions {
-        justify-content: center;
+    .playlist-detail-header .detail-info {
+        align-items: center;
+    }
+
+    .playlist-detail-header .detail-info .detail-play-all {
+        width: 100%;
+        text-align: center;
     }
 }
 
+/* Celulares grandes */
 @media (max-width: 768px) {
     aside {
-        width: 180px;
+        width: 200px;
         padding: 16px 8px;
     }
 
     .logo {
         font-size: 20px;
-        padding-left: 8px;
-    }
-
-    nav ul li {
-        font-size: 13px;
-        padding: 8px 10px;
-    }
-
-    .playlist-section ul li {
-        font-size: 12px;
-        padding: 6px 10px;
     }
 
     main {
@@ -1360,15 +1262,11 @@ footer#player {
     }
 
     .greeting {
-        font-size: 26px;
-    }
-
-    .greeting-sub {
-        font-size: 16px;
+        font-size: 28px;
     }
 
     .playlist-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         gap: 16px;
     }
 
@@ -1384,25 +1282,23 @@ footer#player {
 
     .lyrics-panel {
         width: 100%;
-        max-width: 100%;
     }
 
     footer#player {
-        padding: 10px 16px;
+        padding: 12px 16px;
         height: auto;
-        min-height: 70px;
+        min-height: 80px;
         flex-wrap: wrap;
         gap: 8px;
     }
 
     .player-left {
-        min-width: 140px;
+        min-width: 160px;
         flex: 1;
     }
 
     .player-right {
         min-width: 80px;
-        flex: 0 1 auto;
     }
 
     .player-volume {
@@ -1416,11 +1312,10 @@ footer#player {
     }
 }
 
-/* Celulares grandes */
+/* Celulares */
 @media (max-width: 600px) {
     .app-container {
         flex-direction: column;
-        height: auto;
     }
 
     aside {
@@ -1431,7 +1326,7 @@ footer#player {
         gap: 4px 12px;
         align-items: center;
         height: auto;
-        min-height: 52px;
+        min-height: 50px;
         overflow-y: visible;
     }
 
@@ -1450,12 +1345,18 @@ footer#player {
     nav ul li {
         font-size: 12px;
         padding: 4px 10px;
+        gap: 6px;
+    }
+
+    nav ul li .nav-icon {
+        font-size: 14px;
+        width: 18px;
     }
 
     .playlist-section {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         flex-wrap: wrap;
         flex: 1;
         overflow-y: visible;
@@ -1472,10 +1373,51 @@ footer#player {
     }
 
     .playlist-section ul li {
-        font-size: 12px;
+        font-size: 11px;
         padding: 4px 8px;
         white-space: nowrap;
     }
 
+    .playlist-section ul li .playlist-badge {
+        display: none;
+    }
+
     .user-info {
-        padding: 
+        padding: 4px 8px;
+        border-top: none;
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .user-info span {
+        font-size: 12px;
+    }
+
+    main {
+        padding: 12px 16px;
+    }
+
+    .greeting {
+        font-size: 22px;
+    }
+
+    .greeting-sub {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .section-title {
+        font-size: 18px;
+    }
+
+    .playlist-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+    }
+
+    .playlist-card {
+        padding: 12px;
+    }
+
+    .playlist-card .card-artwork {
+       
