@@ -1,20 +1,3 @@
-/* ===== ESTILO COMPLETO SPOTIFY ===== */
-/* Cores oficiais: #1ed760 (verde), #121212 (fundo), #000000 (sidebar) */
-
-:root {
-    --spotify-green: #1ed760;
-    --spotify-green-hover: #1fdf64;
-    --spotify-black: #000000;
-    --spotify-dark: #121212;
-    --spotify-gray: #181818;
-    --spotify-gray-hover: #282828;
-    --spotify-light-gray: #b3b3b3;
-    --spotify-white: #ffffff;
-    --spotify-card: #181818;
-    --spotify-card-hover: #282828;
-    --spotify-gradient: linear-gradient(to bottom, #1f1f1f, #121212 200px);
-}
-
 /* ===== RESET E BASE ===== */
 * {
     margin: 0;
@@ -24,23 +7,25 @@
 
 body {
     font-family: 'Circular', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--spotify-dark);
-    color: var(--spotify-white);
+    background-color: #121212;
+    color: #ffffff;
     height: 100vh;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ===== LAYOUT PRINCIPAL ===== */
 .app-container {
     display: flex;
-    height: calc(100vh - 90px); /* Altura total menos o player */
+    flex: 1;
     overflow: hidden;
 }
 
 /* ===== BARRA LATERAL ===== */
 aside {
     width: 240px;
-    background-color: var(--spotify-black);
+    background-color: #000000;
     padding: 24px 12px;
     display: flex;
     flex-direction: column;
@@ -48,92 +33,51 @@ aside {
     flex-shrink: 0;
 }
 
-/* Logo Spotify */
-aside h2 {
-    font-size: 24px;
+.logo {
+    font-size: 28px;
     font-weight: 700;
-    color: var(--spotify-white);
+    color: #1ed760;
     padding-left: 12px;
     margin-bottom: 4px;
     letter-spacing: -0.5px;
 }
 
 /* Navegação */
-aside nav ul,
-aside section ul {
+nav ul,
+.playlist-section ul {
     list-style: none;
 }
 
-aside nav ul li,
-aside section ul li {
+nav ul li,
+.playlist-section ul li {
     padding: 10px 12px;
     border-radius: 4px;
     font-size: 14px;
     font-weight: 500;
-    color: var(--spotify-light-gray);
+    color: #b3b3b3;
     cursor: pointer;
     transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 12px;
 }
 
-/* Ícones simulados com emojis */
-aside nav ul li::before {
-    content: '';
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background-size: contain;
-    background-repeat: no-repeat;
+nav ul li:hover,
+.playlist-section ul li:hover {
+    color: #ffffff;
+    background-color: #282828;
+}
+
+nav ul li:active,
+.playlist-section ul li:active {
     opacity: 0.7;
 }
 
-aside nav ul li:nth-child(1)::before {
-    content: '🏠';
-    font-size: 18px;
-}
-aside nav ul li:nth-child(2)::before {
-    content: '🔍';
-    font-size: 18px;
-}
-aside nav ul li:nth-child(3)::before {
-    content: '📚';
-    font-size: 18px;
-}
-
-aside nav ul li:hover,
-aside section ul li:hover {
-    color: var(--spotify-white);
-    background-color: var(--spotify-gray-hover);
-}
-
-aside nav ul li:active,
-aside section ul li:active {
-    opacity: 0.7;
-}
-
-/* Seção de playlists */
-aside section h3 {
+/* Playlists */
+.playlist-section h3 {
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 1.2px;
-    color: var(--spotify-light-gray);
+    color: #b3b3b3;
     padding: 0 12px 8px 12px;
     font-weight: 700;
-}
-
-aside section ul li::before {
-    content: '🎵';
-    font-size: 16px;
-    opacity: 0.6;
-}
-
-aside section ul li:nth-child(2)::before {
-    content: '❤️';
-}
-aside section ul li:nth-child(3)::before {
-    content: '💪';
 }
 
 /* ===== CONTEÚDO PRINCIPAL ===== */
@@ -141,7 +85,7 @@ main {
     flex: 1;
     padding: 24px 32px 32px 32px;
     overflow-y: auto;
-    background: var(--spotify-gradient);
+    background: linear-gradient(to bottom, #1f1f1f, #121212 200px);
 }
 
 /* Scroll personalizado */
@@ -154,17 +98,17 @@ main::-webkit-scrollbar-track {
 }
 
 main::-webkit-scrollbar-thumb {
-    background: var(--spotify-light-gray);
+    background: #b3b3b3;
     border-radius: 6px;
-    border: 3px solid var(--spotify-dark);
+    border: 3px solid #121212;
 }
 
 main::-webkit-scrollbar-thumb:hover {
-    background: var(--spotify-white);
+    background: #ffffff;
 }
 
 /* Cabeçalho */
-main header h1 {
+.greeting {
     font-size: 32px;
     font-weight: 700;
     margin-bottom: 28px;
@@ -172,7 +116,7 @@ main header h1 {
 }
 
 /* Título das playlists */
-main section h2 {
+.section-title {
     font-size: 22px;
     font-weight: 700;
     margin-bottom: 18px;
@@ -189,118 +133,164 @@ main section h2 {
 
 /* Cards das playlists */
 .playlist-card {
-    background-color: var(--spotify-card);
+    background-color: #181818;
     padding: 18px 16px 16px 16px;
     border-radius: 8px;
     transition: all 0.3s ease;
     cursor: pointer;
-    position: relative;
 }
 
 .playlist-card:hover {
-    background-color: var(--spotify-card-hover);
+    background-color: #282828;
     transform: scale(1.02);
 }
 
-/* Imagem placeholder nos cards */
-.playlist-card::before {
-    content: '🎶';
+.playlist-card .card-icon {
     font-size: 48px;
     display: block;
     margin-bottom: 12px;
     opacity: 0.8;
 }
 
-.playlist-card:nth-child(2)::before {
-    content: '🎤';
-}
-
 .playlist-card h3 {
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 4px;
-    color: var(--spotify-white);
+    color: #ffffff;
 }
 
 .playlist-card p {
     font-size: 14px;
-    color: var(--spotify-light-gray);
+    color: #b3b3b3;
     font-weight: 400;
 }
 
 /* ===== PLAYER / RODAPÉ ===== */
 footer {
-    background-color: var(--spotify-gray);
-    border-top: 1px solid var(--spotify-card-hover);
+    background-color: #181818;
+    border-top: 1px solid #282828;
     padding: 16px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 90px;
     flex-shrink: 0;
+    height: 90px;
     position: relative;
 }
 
-/* Botões de controle estilo Spotify */
-footer div:last-child p {
-    color: var(--spotify-white);
+.player-info {
+    font-size: 14px;
+    color: #b3b3b3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 200px;
+}
+
+.current-song {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.status-indicator {
+    font-size: 12px;
+}
+
+.player-controls {
+    color: #ffffff;
     font-weight: 500;
     font-size: 14px;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 8px;
 }
 
-footer div:last-child p::before {
-    content: '⏮';
-    font-size: 18px;
-    opacity: 0.7;
-    transition: opacity 0.2s;
+.control-btn {
     cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.2s;
+    padding: 6px 10px;
+    border-radius: 4px;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 18px;
 }
 
-footer div:last-child p::before:hover {
+.control-btn:hover {
+    opacity: 1;
+    background-color: #282828;
+}
+
+.control-btn:active {
+    transform: scale(0.9);
+}
+
+.play-btn {
+    background-color: #1ed760;
+    color: #000000;
+    border-radius: 50%;
+    padding: 8px 12px;
     opacity: 1;
 }
 
-footer div:last-child p::after {
-    content: '⏭';
-    font-size: 18px;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-    cursor: pointer;
+.play-btn:hover {
+    background-color: #1fdf64;
+    transform: scale(1.05);
 }
 
-/* Texto da música atual */
-footer div:first-child p {
-    font-size: 14px;
-    color: var(--spotify-light-gray);
+/* Volume */
+.player-volume {
     display: flex;
     align-items: center;
     gap: 10px;
+    min-width: 120px;
 }
 
-footer div:first-child p::before {
-    content: '▶️';
-    font-size: 14px;
+.player-volume span {
+    font-size: 16px;
     opacity: 0.7;
 }
 
-/* Barra de progresso simulada */
-footer::after {
-    content: '';
+.volume-bar {
+    flex: 1;
+    height: 4px;
+    background-color: #404040;
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+}
+
+.volume-progress {
+    height: 100%;
+    background-color: #1ed760;
+    border-radius: 2px;
+    transition: width 0.2s;
+}
+
+.volume-bar:hover .volume-progress {
+    background-color: #1fdf64;
+}
+
+/* Barra de progresso da música */
+.progress-bar {
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 30%;
+    width: 100%;
     height: 3px;
-    background: var(--spotify-green);
+    background-color: #404040;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #1ed760;
     border-radius: 0 2px 0 0;
     transition: width 0.3s;
 }
 
-footer:hover::after {
-    width: 45%;
+footer:hover .progress-fill {
+    background-color: #1fdf64;
 }
 
 /* ===== RESPONSIVIDADE ===== */
@@ -321,8 +311,12 @@ footer:hover::after {
         gap: 16px;
     }
     
-    main header h1 {
+    .greeting {
         font-size: 28px;
+    }
+
+    .player-volume {
+        min-width: 80px;
     }
 }
 
@@ -344,41 +338,33 @@ footer:hover::after {
         min-height: 60px;
     }
     
-    aside h2 {
-        font-size: 20px;
+    .logo {
+        font-size: 22px;
         padding-left: 4px;
         margin-bottom: 0;
     }
     
-    aside nav ul,
-    aside section ul {
+    nav ul,
+    .playlist-section ul {
         display: flex;
         flex-wrap: wrap;
         gap: 2px;
     }
     
-    aside nav ul li,
-    aside section ul li {
+    nav ul li,
+    .playlist-section ul li {
         padding: 6px 10px;
         font-size: 13px;
-        gap: 6px;
     }
     
-    aside nav ul li::before,
-    aside section ul li::before {
-        font-size: 14px !important;
-        width: 16px !important;
-        height: 16px !important;
-    }
-    
-    aside section {
+    .playlist-section {
         display: flex;
         align-items: center;
         gap: 8px;
         flex-wrap: wrap;
     }
     
-    aside section h3 {
+    .playlist-section h3 {
         padding: 0;
         font-size: 10px;
         letter-spacing: 0.8px;
@@ -399,26 +385,42 @@ footer:hover::after {
         padding: 14px 12px;
     }
     
-    .playlist-card::before {
+    .playlist-card .card-icon {
         font-size: 36px;
     }
     
     footer {
         flex-direction: column;
-        gap: 4px;
+        gap: 8px;
         padding: 12px 16px;
         height: auto;
-        min-height: 70px;
+        min-height: 100px;
         text-align: center;
     }
     
-    footer div:last-child p {
+    .player-info {
+        min-width: unset;
         font-size: 13px;
-        gap: 12px;
     }
     
-    footer::after {
-        width: 50%;
+    .player-controls {
+        font-size: 13px;
+        gap: 6px;
+    }
+    
+    .control-btn {
+        font-size: 16px;
+        padding: 4px 8px;
+    }
+    
+    .player-volume {
+        min-width: unset;
+        width: 100%;
+        max-width: 150px;
+    }
+
+    .progress-bar {
+        display: none;
     }
 }
 
@@ -429,12 +431,12 @@ footer:hover::after {
         gap: 4px 8px;
     }
     
-    aside h2 {
-        font-size: 17px;
+    .logo {
+        font-size: 18px;
     }
     
-    aside nav ul li,
-    aside section ul li {
+    nav ul li,
+    .playlist-section ul li {
         font-size: 11px;
         padding: 4px 8px;
     }
@@ -452,12 +454,17 @@ footer:hover::after {
         font-size: 12px;
     }
     
-    main header h1 {
+    .greeting {
         font-size: 22px;
     }
     
-    main section h2 {
+    .section-title {
         font-size: 18px;
+    }
+
+    .player-controls .control-btn {
+        font-size: 14px;
+        padding: 3px 6px;
     }
 }
 
@@ -468,16 +475,14 @@ footer:hover::after {
     100% { opacity: 0.6; }
 }
 
-/* Indicador de música tocando (simulado) */
-footer div:first-child p.active {
+.player-info.active .status-indicator {
     animation: pulse 1.5s ease-in-out infinite;
 }
 
-/* ===== UTILITÁRIOS ===== */
-/* Classe para botão verde estilo Spotify */
-.btn-spotify {
-    background-color: var(--spotify-green);
-    color: var(--spotify-black);
+/* ===== BOTÃO ESTILO POBREFY ===== */
+.btn-pobrefy {
+    background-color: #1ed760;
+    color: #000000;
     border: none;
     padding: 8px 24px;
     border-radius: 20px;
@@ -487,11 +492,11 @@ footer div:first-child p.active {
     transition: all 0.2s;
 }
 
-.btn-spotify:hover {
-    background-color: var(--spotify-green-hover);
+.btn-pobrefy:hover {
+    background-color: #1fdf64;
     transform: scale(1.04);
 }
 
-.btn-spotify:active {
+.btn-pobrefy:active {
     transform: scale(0.96);
 }
