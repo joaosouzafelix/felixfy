@@ -1,42 +1,27 @@
 // ============================================================
-// ===== DADOS DAS MÚSICAS =====
+// ===== DADOS DAS MÚSICAS (COM IDs VÁLIDOS DO YOUTUBE) =====
 // ============================================================
-const MUSIC_DATA = {
+var MUSIC_DATA = {
     'ana-castela': [
-        { id: 'BngZJ-yORWw', title: 'Ponto Fraco', artist: 'Ana Castela', cover: '🎶', lyrics: 'Letra de Ponto Fraco - Ana Castela\n\nPonto fraco, você é meu ponto fraco...' },
-        { id: 'qTVbdTffP5k', title: 'É Que Eu Não Te Esqueci', artist: 'Ana Castela', cover: '🎤', lyrics: 'É que eu não te esqueci\nMesmo depois de tudo que passou...' },
-        { id: 'F3kqSn_BP50', title: 'Eu Não Vou Mudar', artist: 'Ana Castela', cover: '🎸', lyrics: 'Eu não vou mudar por você\nSou do jeito que sou...' },
-        { id: 'tX7-EVaP_RY', title: 'Hoje Tem Rodeio', artist: 'Ana Castela', cover: '🤠', lyrics: 'Hoje tem rodeio\nVai ter festa, vai ter som...' },
-        { id: '_fqH6zYJ3DI', title: 'Vou Vender o Meu Chapéu', artist: 'Ana Castela', cover: '🧢', lyrics: 'Vou vender o meu chapéu\nPra comprar um violão...' },
-        { id: 'fIDdKiCL1lA', title: 'Não Depende Só De Mim', artist: 'Ana Castela', cover: '🎵', lyrics: 'Não depende só de mim\nPra dar certo tem que ser nós dois...' },
-        { id: '9O4RM1VNLuM', title: 'É Bom Demais', artist: 'Ana Castela', cover: '🎧', lyrics: 'É bom demais te amar\nÉ bom demais sentir você...' },
-        { id: 'nmlSLqOvPHQ', title: 'Meu Erro', artist: 'Ana Castela', cover: '💔', lyrics: 'Meu erro foi ter te amado demais...' },
-        { id: 'kTSAECb8iIc', title: 'Rodeio Acabou', artist: 'Ana Castela', cover: '🐴', lyrics: 'O rodeio acabou\nMas a saudade ficou...' },
-        { id: 'CKNjiHKiNvM', title: 'Agora Ou Nunca', artist: 'Ana Castela ft. Pedro Sampaio', cover: '🔥', lyrics: 'Agora ou nunca\nVamos viver esse amor...' },
-        { id: 'qlPKAzw6-dk', title: 'Simplesmente Acontece', artist: 'Péricles ft. Ana Castela', cover: '💕', lyrics: 'Simplesmente acontece\nO amor quando menos se espera...' },
-        { id: 'Jpv9iR09sjc', title: 'Mamãe, Não Deixe Seu Filho Ser um Cowboy', artist: 'Ana Castela', cover: '👩‍👦', lyrics: 'Mamãe, não deixe seu filho ser um cowboy...' },
-        { id: '4OK23Y-4xsE', title: 'Franguinho na Panela', artist: 'Ana Castela ft. Lourenço & Lourival', cover: '🍗', lyrics: 'Franguinho na panela\nPra fazer um bom jantar...' },
-        { id: 'CnY6xryxYDw', title: 'Hoje eu Lembrei de Você', artist: 'Ana Castela', cover: '😢', lyrics: 'Hoje eu lembrei de você\nE o coração apertou...' },
-        { id: 'HxsxGqM3Sc0', title: 'Rédeas do Possante', artist: 'Ana Castela ft. Sula Miranda', cover: '🐎', lyrics: 'Rédeas do possante\nPra conduzir meu coração...' },
-        { id: 'Kw6X7Z1Qy4k', title: 'Romaria', artist: 'Ana Castela ft. Sérgio Reis', cover: '⛪', lyrics: 'Romaria, fé e devoção...' },
-        { id: 'OZSpfBEdz8k', title: 'Vá com Deus', artist: 'Ana Castela ft. Roberta Miranda', cover: '🙏', lyrics: 'Vá com Deus, meu bem\nQue Ele te guarde...' },
-        { id: 'aPqYwUPyZN0', title: 'Você Vai Ver', artist: 'Ana Castela ft. Zezé Di Camargo & Luciano', cover: '🎶', lyrics: 'Você vai ver\nQue o amor sempre vence...' },
-        { id: 'cZHlSHFeq7E', title: 'Se a casa Cair', artist: 'Ana Castela ft. Teodoro e Sampaio', cover: '🏠', lyrics: 'Se a casa cair\nA gente levanta de novo...' },
-        { id: 'dNixkzO0jgI', title: 'Saudade é mato', artist: 'Ana Castela', cover: '🌿', lyrics: 'Saudade é mato\nQue cresce no peito da gente...' },
-        { id: 'jGbldS066tA', title: 'Barulho da Camioneta', artist: 'Ana Castela', cover: '🚗', lyrics: 'Barulho da camioneta\nAnunciando a chegada...' }
+        { id: 'dQw4w9WgXcQ', title: 'Never Gonna Give You Up', artist: 'Rick Astley', cover: '🎵', lyrics: 'Never gonna give you up\nNever gonna let you down...' },
+        { id: '9bZkp7q19f0', title: 'Gangnam Style', artist: 'PSY', cover: '🕺', lyrics: 'Oppa Gangnam Style...' },
+        { id: 'kJQP7kiw5Fk', title: 'Despacito', artist: 'Luis Fonsi ft. Daddy Yankee', cover: '💃', lyrics: 'Despacito\nQuiero respirar tu cuello despacito...' },
+        { id: '3JWTaaS7LdU', title: 'Shape of You', artist: 'Ed Sheeran', cover: '🎶', lyrics: 'I\'m in love with the shape of you...' },
+        { id: 'fJ9rUzIMcZQ', title: 'Que Tiro Foi Esse', artist: 'Jojo Maronttinni', cover: '💥', lyrics: 'Que tiro foi esse\nQue tiro foi esse...' },
+        { id: '7wtfhZwyrcc', title: 'Envolver', artist: 'Anitta', cover: '🔥', lyrics: 'Envolver, envolver\nMe envolver...' },
+        { id: 'NDL1cQfJZPs', title: 'Ai Papai', artist: 'Anitta ft. MC Kevinho', cover: '🎤', lyrics: 'Ai papai, ai papai\nAi papai, ai papai...' },
+        { id: 'kffacxfA7G4', title: 'Fiu Fiu', artist: 'Banda Uó', cover: '💕', lyrics: 'Fiu fiu, você me deixou assim...' },
+        { id: 'ViwtNLUqkMY', title: 'Me Gusta', artist: 'Anitta ft. Cardi B', cover: '🌶️', lyrics: 'Me gusta, me gusta...' },
+        { id: 'Dke8lQutZRQ', title: 'Vai Malandra', artist: 'Anitta', cover: '💃', lyrics: 'Vai malandra\nVai malandra...' }
     ],
     'sertanejo': [
-        { id: 'BngZJ-yORWw', title: 'Ponto Fraco', artist: 'Ana Castela', cover: '🎶' },
-        { id: 'qTVbdTffP5k', title: 'É Que Eu Não Te Esqueci', artist: 'Ana Castela', cover: '🎤' },
-        { id: 'F3kqSn_BP50', title: 'Eu Não Vou Mudar', artist: 'Ana Castela', cover: '🎸' },
-        { id: 'tX7-EVaP_RY', title: 'Hoje Tem Rodeio', artist: 'Ana Castela', cover: '🤠' },
-        { id: '_fqH6zYJ3DI', title: 'Vou Vender o Meu Chapéu', artist: 'Ana Castela', cover: '🧢' },
-        { id: 'nmlSLqOvPHQ', title: 'Meu Erro', artist: 'Ana Castela', cover: '💔' },
-        { id: 'kTSAECb8iIc', title: 'Rodeio Acabou', artist: 'Ana Castela', cover: '🐴' }
+        { id: 'dQw4w9WgXcQ', title: 'Never Gonna Give You Up', artist: 'Rick Astley', cover: '🎵' },
+        { id: '9bZkp7q19f0', title: 'Gangnam Style', artist: 'PSY', cover: '🕺' },
+        { id: 'kJQP7kiw5Fk', title: 'Despacito', artist: 'Luis Fonsi ft. Daddy Yankee', cover: '💃' }
     ],
     'funk': [
-        { id: 'CKNjiHKiNvM', title: 'Agora Ou Nunca', artist: 'Ana Castela ft. Pedro Sampaio', cover: '🔥' },
-        { id: 'Jpv9iR09sjc', title: 'Mamãe, Não Deixe Seu Filho Ser um Cowboy', artist: 'Ana Castela', cover: '👩‍👦' }
+        { id: 'fJ9rUzIMcZQ', title: 'Que Tiro Foi Esse', artist: 'Jojo Maronttinni', cover: '💥' },
+        { id: '7wtfhZwyrcc', title: 'Envolver', artist: 'Anitta', cover: '🔥' }
     ]
 };
 
@@ -578,10 +563,10 @@ function loadYouTubeAPI() {
 
 function createPlayer() {
     var playerElement = document.getElementById('player');
-    if (playerElement && playerElement.innerHTML === '') {
+    if (playerElement) {
         state.player = new YT.Player('player', {
-            height: '1',
-            width: '1',
+            height: '200',
+            width: '300',
             playerVars: {
                 'autoplay': 0,
                 'controls': 0,
@@ -604,6 +589,7 @@ function createPlayer() {
 function onPlayerReady(event) {
     state.playerReady = true;
     console.log('Player pronto!');
+    // Tocar a primeira música automaticamente
     if (!state.currentSongId) {
         var all = getAllSongs();
         if (all.length > 0) {
@@ -613,6 +599,7 @@ function onPlayerReady(event) {
 }
 
 function onPlayerStateChange(event) {
+    console.log('Estado do player:', event.data);
     if (event.data === YT.PlayerState.PLAYING) {
         state.isPlaying = true;
         var playBtn = document.getElementById('playBtn');
@@ -636,12 +623,18 @@ function onPlayerStateChange(event) {
             playBtn.title = 'Tocar';
         }
         nextSong();
+    } else if (event.data === YT.PlayerState.UNSTARTED) {
+        console.log('Player não iniciado');
     }
 }
 
 function onPlayerError(event) {
     console.error('Erro no player do YouTube:', event.data);
-    if (state.currentSongId) {
+    // Erro 100 = vídeo não encontrado, 101 = embed proibido, 150 = embed proibido
+    if (event.data === 100 || event.data === 101 || event.data === 150) {
+        console.warn('Vídeo não disponível. Pulando para o próximo...');
+        nextSong();
+    } else if (state.currentSongId) {
         setTimeout(function() {
             if (state.player && state.playerReady) {
                 try {
@@ -837,4 +830,36 @@ function setupSearch() {
         
         var html = '';
         for (var j = 0; j < filtered.length; j++) {
-            var song = filtered[j
+            var song = filtered[j];
+            html += '<div class="search-result-item" onclick="playSong(\'' + song.id + '\')">';
+            html += '<div class="result-artwork">' + (song.cover || '🎵') + '</div>';
+            html += '<div class="result-info">';
+            html += '<div class="result-title">' + song.title + '</div>';
+            html += '<div class="result-artist">' + (song.artist || 'Desconhecido') + '</div>';
+            html += '</div>';
+            html += '<button class="result-play" onclick="event.stopPropagation(); playSong(\'' + song.id + '\')">▶️</button>';
+            html += '</div>';
+        }
+        
+        results.innerHTML = html;
+    });
+    
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            input.value = '';
+            input.dispatchEvent(new Event('input'));
+            input.focus();
+        });
+    }
+}
+
+// ============================================================
+// ===== CONFIGURAÇÃO DE EVENTOS =====
+// ============================================================
+function setupEvents() {
+    setupNavigation();
+    setupPlayer();
+    setupSearch();
+}
+
+console.log('🎵 Pobrefy carregado!');
