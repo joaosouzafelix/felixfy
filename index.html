@@ -436,8 +436,24 @@
             font-size: 14px;
         }
 
+        .playlist-detail-header .detail-info .detail-delete {
+            margin-top: 8px;
+            padding: 6px 16px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            width: fit-content;
+        }
+
+        .playlist-detail-header .detail-info .detail-delete:hover {
+            background: #c82333;
+        }
+
         .playlist-detail-header .detail-info .detail-play-all {
-            margin-top: 12px;
+            margin-top: 8px;
             padding: 10px 24px;
             background: var(--green-primary);
             color: #000000;
@@ -1001,14 +1017,14 @@
                 { id: 'jGbldS066tA', title: 'Barulho da Camioneta', artist: 'Ana Castela', cover: '🚗', lyrics: 'Barulho da camioneta\nAnunciando a chegada...' }
             ],
             'sertanejo': [
-                { id: 'BngZJ-yORWw', title: 'Ponto Fraco', artist: 'Ana Castela', cover: '🎶', genre: 'sertanejo' },
-                { id: 'qTVbdTffP5k', title: 'É Que Eu Não Te Esqueci', artist: 'Ana Castela', cover: '🎤', genre: 'sertanejo' },
-                { id: 'F3kqSn_BP50', title: 'Eu Não Vou Mudar', artist: 'Ana Castela', cover: '🎸', genre: 'sertanejo' },
-                { id: 'tX7-EVaP_RY', title: 'Hoje Tem Rodeio', artist: 'Ana Castela', cover: '🤠', genre: 'sertanejo' },
-                { id: '_fqH6zYJ3DI', title: 'Vou Vender o Meu Chapéu', artist: 'Ana Castela', cover: '🧢', genre: 'sertanejo' },
+                { id: 'BngZJ-yORWw', title: 'Ponto Fraco', artist: 'Ana Castela', cover: '🎶' },
+                { id: 'qTVbdTffP5k', title: 'É Que Eu Não Te Esqueci', artist: 'Ana Castela', cover: '🎤' },
+                { id: 'F3kqSn_BP50', title: 'Eu Não Vou Mudar', artist: 'Ana Castela', cover: '🎸' },
+                { id: 'tX7-EVaP_RY', title: 'Hoje Tem Rodeio', artist: 'Ana Castela', cover: '🤠' },
+                { id: '_fqH6zYJ3DI', title: 'Vou Vender o Meu Chapéu', artist: 'Ana Castela', cover: '🧢' },
             ],
             'funk': [
-                { id: 'CKNjiHKiNvM', title: 'Agora Ou Nunca', artist: 'Ana Castela ft. Pedro Sampaio', cover: '🔥', genre: 'funk' },
+                { id: 'CKNjiHKiNvM', title: 'Agora Ou Nunca', artist: 'Ana Castela ft. Pedro Sampaio', cover: '🔥' },
             ]
         };
 
@@ -1031,15 +1047,4 @@
             'funk': {
                 id: 'funk',
                 name: 'Funk',
-                description: 'Os melhores funks',
-                cover: '🎧',
-                songs: MUSIC_DATA['funk'].map(s => s.id)
-            }
-        };
-
-        // ============================================================
-        // ===== ESTADO DA APLICAÇÃO =====
-        // ============================================================
-        let state = {
-           
-           }
+                description
