@@ -26,7 +26,6 @@ const MUSIC_DATA = {
         { id: 'jGbldS066tA', title: 'Barulho da Camioneta', artist: 'Ana Castela', cover: '🚗', lyrics: 'Barulho da camioneta\nAnunciando a chegada...' }
     ],
     'sertanejo': [
-        // Músicas sertanejas (usando algumas que já existem e marcando como sertanejo)
         { id: 'BngZJ-yORWw', title: 'Ponto Fraco', artist: 'Ana Castela', cover: '🎶', genre: 'sertanejo' },
         { id: 'qTVbdTffP5k', title: 'É Que Eu Não Te Esqueci', artist: 'Ana Castela', cover: '🎤', genre: 'sertanejo' },
         { id: 'F3kqSn_BP50', title: 'Eu Não Vou Mudar', artist: 'Ana Castela', cover: '🎸', genre: 'sertanejo' },
@@ -34,7 +33,6 @@ const MUSIC_DATA = {
         { id: '_fqH6zYJ3DI', title: 'Vou Vender o Meu Chapéu', artist: 'Ana Castela', cover: '🧢', genre: 'sertanejo' },
     ],
     'funk': [
-        // Músicas de funk (usando algumas que já existem e marcando como funk)
         { id: 'CKNjiHKiNvM', title: 'Agora Ou Nunca', artist: 'Ana Castela ft. Pedro Sampaio', cover: '🔥', genre: 'funk' },
     ]
 };
@@ -67,6 +65,12 @@ const DEFAULT_PLAYLISTS = {
 
 
 // ============================================================
+// ===== CREDENCIAIS DE LOGIN =====
+// ============================================================
+const ADMIN_USER = { name: 'Admin', username: 'admin', password: 'admin' };
+
+
+// ============================================================
 // ===== ESTADO DA APLICAÇÃO =====
 // ============================================================
 let state = {
@@ -78,8 +82,12 @@ let state = {
     playerReady: false,
     player: null,
     playlists: {},
-    queue: []
+    queue: [],
+    playerRequested: false
 };
+
+let ytApiLoading = false;
+let ytApiLoaded = false;
 
 
 // ============================================================
@@ -88,7 +96,7 @@ let state = {
 document.addEventListener('DOMContentLoaded', () => {
     // Carregar dados do localStorage
     loadFromStorage();
-   
+
     // Verificar se usuário está logado
     if (state.currentUser) {
         showApp();
@@ -99,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         showLogin();
     }
-   
+
     // Configurar eventos
     setupEvents();
 });
@@ -108,16 +116,19 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================================
 // ===== LOCAL STORAGE =====
 // ============================================================
+const SESSION_KEY = 'pobrefy_session';
+const PLAYLISTS_KEY = 'pobrefy_playlists';
+
 function loadFromStorage() {
     try {
-        const savedUser = localStorage.getItem('pobrefy_user');
-        if (savedUser) {
-            state.currentUser = JSON.parse(savedUser);
+        if (localStorage.getItem(SESSION_KEY)) {
+            state.currentUser = ADMIN_USER;
         }
-       
-        const savedPlaylists = localStorage.getItem('pobrefy_playlists');
+
+        const savedPlaylists = localStorage.getItem(PLAYLISTS_KEY);
         if (savedPlaylists) {
-            state.playlists = JSON.parse(savedPlaylists);
+            const parsed = JSON.parse(savedPlaylists);
+            state.playlists = { ...DEFAULT_PLAYLISTS, ...parsed };
         } else {
             state.playlists = { ...DEFAULT_PLAYLISTS };
         }
@@ -131,9 +142,9 @@ function loadFromStorage() {
 function saveToStorage() {
     try {
         if (state.currentUser) {
-            localStorage.setItem('pobrefy_user', JSON.stringify(state.currentUser));
+            localStorage.setItem(SESSION_KEY, '1');
         }
-        localStorage.setItem('pobrefy_playlists', JSON.stringify(state.playlists));
+        localStorage.setItem(PLAYLISTS_KEY, JSON.stringify(state.playlists));
     } catch (e) {
         console.error('Erro ao salvar dados:', e);
     }
@@ -141,7 +152,7 @@ function saveToStorage() {
 
 
 // ============================================================
-// ===== LOGIN / CADASTRO =====
+// ===== LOGIN =====
 // ============================================================
 function showLogin() {
     document.getElementById('loginScreen').style.display = 'flex';
@@ -152,39 +163,19 @@ function showLogin() {
 function showApp() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
-    document.getElementById('userNameDisplay').textContent = state.currentUser?.name || 'Usuário';
+    document.getElementById('userNameDisplay').textContent = state.currentUser?.name || 'Admin';
 }
 
 
 function setupLoginEvents() {
-    // Mostrar cadastro
-    document.getElementById('showRegister').addEventListener('click', (e) => {
-        e.preventDefault();
-        document.querySelector('.login-box').style.display = 'none';
-        document.querySelector('.register-box').style.display = 'block';
-    });
-
-
-    // Mostrar login
-    document.getElementById('showLogin').addEventListener('click', (e) => {
-        e.preventDefault();
-        document.querySelector('.login-box').style.display = 'block';
-        document.querySelector('.register-box').style.display = 'none';
-    });
-
-
     // Login
     document.getElementById('loginForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        const email = document.getElementById('loginEmail').value;
+        const username = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
-       
-        // Verificar se o usuário existe
-        const users = JSON.parse(localStorage.getItem('pobrefy_users') || '[]');
-        const user = users.find(u => u.email === email && u.password === password);
-       
-        if (user) {
-            state.currentUser = { name: user.name, email: user.email };
+
+        if (username === ADMIN_USER.username && password === ADMIN_USER.password) {
+            state.currentUser = { name: ADMIN_USER.name };
             saveToStorage();
             showApp();
             updateGreeting();
@@ -192,63 +183,17 @@ function setupLoginEvents() {
             renderLibrary();
             renderSidebar();
         } else {
-            alert('E-mail ou senha incorretos!');
+            const error = document.getElementById('loginError');
+            error.style.display = 'block';
+            setTimeout(() => { error.style.display = 'none'; }, 3000);
         }
     });
-
-
-    // Cadastro
-    document.getElementById('registerForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const name = document.getElementById('registerName').value;
-        const email = document.getElementById('registerEmail').value;
-        const password = document.getElementById('registerPassword').value;
-        const confirm = document.getElementById('registerConfirmPassword').value;
-       
-        if (password !== confirm) {
-            alert('As senhas não coincidem!');
-            return;
-        }
-       
-        const users = JSON.parse(localStorage.getItem('pobrefy_users') || '[]');
-       
-        if (users.find(u => u.email === email)) {
-            alert('Este e-mail já está cadastrado!');
-            return;
-        }
-       
-        users.push({ name, email, password });
-        localStorage.setItem('pobrefy_users', JSON.stringify(users));
-       
-        state.currentUser = { name, email };
-        saveToStorage();
-        showApp();
-        updateGreeting();
-        renderHome();
-        renderLibrary();
-        renderSidebar();
-    });
-
 
     // Logout
     document.getElementById('logoutBtn').addEventListener('click', () => {
         state.currentUser = null;
-        localStorage.removeItem('pobrefy_user');
+        localStorage.removeItem(SESSION_KEY);
         showLogin();
-        document.querySelector('.login-box').style.display = 'block';
-        document.querySelector('.register-box').style.display = 'none';
-    });
-
-
-    // Google Login (preparado)
-    document.getElementById('googleLoginBtn').addEventListener('click', () => {
-        alert('⚠️ Configuração do Google OAuth necessária!\n\n' +
-              'Para ativar o login com Google, você precisa:\n' +
-              '1. Criar um projeto no Google Cloud Console\n' +
-              '2. Habilitar a API Google Identity Services\n' +
-              '3. Configurar o Client ID no código\n\n' +
-              'Arquivo: script.js\n' +
-              'Linha: const GOOGLE_CLIENT_ID = "seu-client-id-aqui";');
     });
 }
 
@@ -259,7 +204,7 @@ function setupLoginEvents() {
 function updateGreeting() {
     const hour = new Date().getHours();
     let greeting = '';
-   
+
     if (hour >= 5 && hour < 12) {
         greeting = 'Bom dia';
     } else if (hour >= 12 && hour < 18) {
@@ -267,7 +212,7 @@ function updateGreeting() {
     } else {
         greeting = 'Boa noite';
     }
-   
+
     const name = state.currentUser?.name || '';
     const message = document.getElementById('greetingMessage');
     message.textContent = name ? `${greeting}, ${name}!` : `${greeting}!`;
@@ -281,26 +226,23 @@ function setupNavigation() {
     document.querySelectorAll('nav ul li').forEach(item => {
         item.addEventListener('click', () => {
             const page = item.dataset.page;
-           
-            // Atualizar menu
+
             document.querySelectorAll('nav ul li').forEach(li => li.classList.remove('active'));
             item.classList.add('active');
-           
-            // Mostrar página
+
             document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
             const target = document.getElementById(`page-${page}`);
             if (target) target.classList.add('active');
         });
     });
-   
+
     // Playlists na sidebar
     document.querySelectorAll('#sidebarPlaylists li[data-playlist]').forEach(item => {
         item.addEventListener('click', () => {
-            const playlistId = item.dataset.playlist;
-            openPlaylist(playlistId);
+            openPlaylist(item.dataset.playlist);
         });
     });
-   
+
     // Criar playlist
     document.querySelector('.create-playlist-btn').addEventListener('click', () => {
         const name = prompt('Nome da nova playlist:');
@@ -308,10 +250,11 @@ function setupNavigation() {
             createPlaylist(name.trim());
         }
     });
-   
+
     // Voltar da playlist
     document.getElementById('backFromPlaylist').addEventListener('click', () => {
         document.getElementById('page-playlist').style.display = 'none';
+        document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
         document.getElementById('page-home').classList.add('active');
     });
 }
@@ -355,12 +298,12 @@ function deletePlaylist(id) {
 function openPlaylist(id) {
     const playlist = state.playlists[id];
     if (!playlist) return;
-   
+
     state.currentPlaylist = id;
-   
+
     const detail = document.getElementById('playlistDetail');
     const songs = playlist.songs.map(songId => getSongById(songId)).filter(s => s);
-   
+
     detail.innerHTML = `
         <div class="playlist-detail-header">
             <div class="detail-artwork">${playlist.cover || '🎵'}</div>
@@ -374,7 +317,7 @@ function openPlaylist(id) {
             </div>
         </div>
         <div class="playlist-tracks">
-            ${songs.map((song, index) => `
+            ${songs.map(song => `
                 <div class="playlist-track" onclick="playSong('${song.id}', '${id}')">
                     <div class="track-artwork">${song.cover || '🎵'}</div>
                     <div class="track-info">
@@ -386,7 +329,7 @@ function openPlaylist(id) {
             `).join('')}
         </div>
     `;
-   
+
     document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
     document.getElementById('page-playlist').style.display = 'block';
 }
@@ -395,10 +338,10 @@ function openPlaylist(id) {
 function playPlaylist(id) {
     const playlist = state.playlists[id];
     if (!playlist || !playlist.songs.length) return;
-   
+
     state.queue = playlist.songs.map(songId => getSongById(songId)).filter(s => s);
     state.currentSongIndex = 0;
-   
+
     if (state.queue.length > 0) {
         playSong(state.queue[0].id, id);
     }
@@ -432,7 +375,7 @@ function setupPlayer() {
     document.getElementById('playBtn').addEventListener('click', togglePlay);
     document.getElementById('prevBtn').addEventListener('click', prevSong);
     document.getElementById('nextBtn').addEventListener('click', nextSong);
-   
+
     // Barra de progresso
     document.querySelector('.progress-bar').addEventListener('click', (e) => {
         if (!state.player || !state.playerReady) return;
@@ -443,7 +386,7 @@ function setupPlayer() {
             state.player.seekTo(percent * duration, true);
         }
     });
-   
+
     // Volume
     document.querySelector('.volume-bar').addEventListener('click', (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -453,7 +396,7 @@ function setupPlayer() {
             state.player.setVolume(percent);
         }
     });
-   
+
     // Letras
     document.getElementById('toggleLyrics').addEventListener('click', toggleLyrics);
     document.getElementById('closeLyrics').addEventListener('click', () => {
@@ -462,51 +405,75 @@ function setupPlayer() {
 }
 
 
-function playSong(songId, playlistId) {
+async function playSong(songId, playlistId) {
     const song = getSongById(songId);
     if (!song) return;
-   
+
     state.currentSongId = songId;
     state.currentPlaylist = playlistId || state.currentPlaylist;
-   
+    state.playerRequested = true;
+
     // Atualizar UI
     document.getElementById('playerSong').textContent = song.title;
     document.getElementById('playerArtist').textContent = song.artist || 'Desconhecido';
     document.getElementById('playerArtwork').innerHTML = song.cover || '🎵';
-   
-    // Tocar no YouTube
-    if (state.player && state.playerReady) {
-        state.player.loadVideoById(songId);
-        state.player.playVideo();
-        state.isPlaying = true;
-        document.getElementById('playBtn').textContent = '⏸';
-        document.getElementById('playBtn').title = 'Pausar';
-    }
-   
-    // Atualizar letras
     updateLyrics(song);
+
+    // Esperar o player do YouTube ficar pronto
+    const ready = await waitForPlayer(15000);
+    if (!ready) {
+        console.error('Player do YouTube não carregou a tempo.');
+        updatePlayButton(false);
+        return;
+    }
+
+    // Tocar no YouTube
+    state.player.loadVideoById(songId);
+    state.player.playVideo();
+    updatePlayButton(true);
 }
 
 
 function togglePlay() {
-    if (!state.player || !state.playerReady) {
+    if (!state.currentSongId) {
         // Se não houver música, tenta tocar a primeira
         const firstSong = getAllSongs()[0];
-        if (firstSong) playSong(firstSong.id);
+        if (firstSong) {
+            playSong(firstSong.id);
+        }
         return;
     }
-   
+
+    if (!state.player || !state.playerReady) {
+        // Player ainda não carregou: republica a música atual
+        playSong(state.currentSongId);
+        return;
+    }
+
     if (state.isPlaying) {
         state.player.pauseVideo();
-        state.isPlaying = false;
-        document.getElementById('playBtn').textContent = '▶️';
-        document.getElementById('playBtn').title = 'Tocar';
+        updatePlayButton(false);
     } else {
-        state.player.playVideo();
-        state.isPlaying = true;
-        document.getElementById('playBtn').textContent = '⏸';
-        document.getElementById('playBtn').title = 'Pausar';
+        let loadedId = null;
+        try {
+            loadedId = state.player.getVideoData()?.video_id || null;
+        } catch (e) {
+            loadedId = null;
+        }
+        if (loadedId === state.currentSongId) {
+            state.player.playVideo();
+            updatePlayButton(true);
+        } else {
+            playSong(state.currentSongId);
+        }
     }
+}
+
+
+function updatePlayButton(playing) {
+    state.isPlaying = playing;
+    document.getElementById('playBtn').textContent = playing ? '⏸' : '▶️';
+    document.getElementById('playBtn').title = playing ? 'Pausar' : 'Tocar';
 }
 
 
@@ -519,10 +486,10 @@ function nextSong() {
         }
         return;
     }
-   
+
     const playlist = state.playlists[state.currentPlaylist];
     if (!playlist) return;
-   
+
     const currentIndex = playlist.songs.findIndex(id => id === state.currentSongId);
     if (currentIndex < playlist.songs.length - 1) {
         playSong(playlist.songs[currentIndex + 1].id, state.currentPlaylist);
@@ -541,10 +508,10 @@ function prevSong() {
         }
         return;
     }
-   
+
     const playlist = state.playlists[state.currentPlaylist];
     if (!playlist) return;
-   
+
     const currentIndex = playlist.songs.findIndex(id => id === state.currentSongId);
     if (currentIndex > 0) {
         playSong(playlist.songs[currentIndex - 1].id, state.currentPlaylist);
@@ -566,9 +533,9 @@ function toggleLyrics() {
 function updateLyrics(song) {
     const title = document.getElementById('lyricsTitle');
     const content = document.getElementById('lyricsContent');
-   
+
     title.textContent = `${song.title} - ${song.artist || 'Desconhecido'}`;
-   
+
     if (song.lyrics) {
         content.innerHTML = `<pre>${song.lyrics}</pre>`;
     } else {
@@ -581,9 +548,11 @@ function updateLyrics(song) {
 // ===== YOUTUBE PLAYER =====
 // ============================================================
 function onYouTubeIframeAPIReady() {
+    if (state.player) return;
+
     state.player = new YT.Player('player', {
-        height: '1',
-        width: '1',
+        height: '360',
+        width: '640',
         playerVars: {
             'autoplay': 0,
             'controls': 0,
@@ -592,13 +561,37 @@ function onYouTubeIframeAPIReady() {
             'rel': 0,
             'showinfo': 0,
             'iv_load_policy': 3,
-            'fs': 0
+            'fs': 0,
+            'playsinline': 1
         },
         events: {
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange,
             'onError': onPlayerError
         }
+    });
+}
+
+
+function waitForPlayer(timeout) {
+    return new Promise(resolve => {
+        if (state.player && state.playerReady) {
+            resolve(true);
+            return;
+        }
+        // Garantir que a API do YouTube foi solicitada
+        loadYouTubeAPI();
+
+        const start = Date.now();
+        const check = setInterval(() => {
+            if (state.player && state.playerReady) {
+                clearInterval(check);
+                resolve(true);
+            } else if (Date.now() - start > timeout) {
+                clearInterval(check);
+                resolve(false);
+            }
+        }, 250);
     });
 }
 
@@ -611,18 +604,12 @@ function onPlayerReady(event) {
 
 function onPlayerStateChange(event) {
     if (event.data === YT.PlayerState.PLAYING) {
-        state.isPlaying = true;
-        document.getElementById('playBtn').textContent = '⏸';
-        document.getElementById('playBtn').title = 'Pausar';
+        updatePlayButton(true);
         updateProgress();
     } else if (event.data === YT.PlayerState.PAUSED) {
-        state.isPlaying = false;
-        document.getElementById('playBtn').textContent = '▶️';
-        document.getElementById('playBtn').title = 'Tocar';
+        updatePlayButton(false);
     } else if (event.data === YT.PlayerState.ENDED) {
-        state.isPlaying = false;
-        document.getElementById('playBtn').textContent = '▶️';
-        document.getElementById('playBtn').title = 'Tocar';
+        updatePlayButton(false);
         nextSong();
     }
 }
@@ -637,7 +624,7 @@ function updateProgress() {
     if (state.player && state.playerReady && state.player.getCurrentTime) {
         const duration = state.player.getDuration();
         const currentTime = state.player.getCurrentTime();
-       
+
         if (duration > 0) {
             const progress = (currentTime / duration) * 100;
             document.getElementById('progressFill').style.width = progress + '%';
@@ -667,7 +654,7 @@ function renderHome() {
         { id: 'sertanejo', name: 'Sertanejo', cover: '🎸', description: `${MUSIC_DATA['sertanejo'].length} músicas` },
         { id: 'funk', name: 'Funk', cover: '🎧', description: `${MUSIC_DATA['funk'].length} músicas` }
     ];
-   
+
     // Adicionar playlists do usuário
     for (const [id, playlist] of Object.entries(state.playlists)) {
         if (playlist.isCustom && !playlists.find(p => p.id === id)) {
@@ -680,7 +667,7 @@ function renderHome() {
             });
         }
     }
-   
+
     container.innerHTML = playlists.map(p => `
         <div class="playlist-card" onclick="openPlaylist('${p.id}')">
             <div class="card-artwork">${p.cover || '🎵'}</div>
@@ -699,7 +686,7 @@ function renderLibrary() {
         id,
         ...playlist
     }));
-   
+
     container.innerHTML = playlists.map(p => `
         <div class="playlist-card" onclick="openPlaylist('${p.id}')">
             <div class="card-artwork">${p.cover || '🎵'}</div>
@@ -717,31 +704,31 @@ function renderSidebar() {
         id,
         ...playlist
     }));
-   
+
     // Manter os itens existentes e adicionar as playlists
     let html = `
         <li data-playlist="ana-castela">🎤 Ana Castela</li>
         <li data-playlist="sertanejo">🎸 Sertanejo</li>
         <li data-playlist="funk">🎧 Funk</li>
     `;
-   
+
     // Adicionar playlists personalizadas
     for (const p of playlists) {
         if (p.isCustom) {
             html += `<li data-playlist="${p.id}">📋 ${p.name}</li>`;
         }
     }
-   
+
     html += `<li class="create-playlist-btn">➕ Criar playlist</li>`;
     container.innerHTML = html;
-   
+
     // Reatribuir eventos
     container.querySelectorAll('li[data-playlist]').forEach(item => {
         item.addEventListener('click', () => {
             openPlaylist(item.dataset.playlist);
         });
     });
-   
+
     container.querySelector('.create-playlist-btn').addEventListener('click', () => {
         const name = prompt('Nome da nova playlist:');
         if (name && name.trim()) {
@@ -758,27 +745,27 @@ function setupSearch() {
     const input = document.getElementById('searchInput');
     const clearBtn = document.getElementById('clearSearch');
     const results = document.getElementById('searchResults');
-   
+
     input.addEventListener('input', () => {
         const query = input.value.trim().toLowerCase();
         clearBtn.classList.toggle('visible', query.length > 0);
-       
+
         if (query.length === 0) {
             results.innerHTML = '';
             return;
         }
-       
+
         const allSongs = getAllSongs();
         const filtered = allSongs.filter(song =>
             song.title.toLowerCase().includes(query) ||
             (song.artist && song.artist.toLowerCase().includes(query))
         );
-       
+
         if (filtered.length === 0) {
             results.innerHTML = '<div class="no-results">🎵 Nenhuma música encontrada</div>';
             return;
         }
-       
+
         results.innerHTML = filtered.map(song => `
             <div class="search-result-item" onclick="playSong('${song.id}')">
                 <div class="result-artwork">${song.cover || '🎵'}</div>
@@ -790,7 +777,7 @@ function setupSearch() {
             </div>
         `).join('');
     });
-   
+
     clearBtn.addEventListener('click', () => {
         input.value = '';
         input.dispatchEvent(new Event('input'));
@@ -813,13 +800,32 @@ function setupEvents() {
 // ============================================================
 // ===== CARREGAR API DO YOUTUBE =====
 // ============================================================
-const tag = document.createElement('script');
-tag.src = 'https://www.youtube.com/iframe_api';
-const firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+function loadYouTubeAPI() {
+    if (window.YT && window.YT.Player) {
+        ytApiLoaded = true;
+        // Se a API já estiver carregada mas o player não foi criado,
+        // iniciamos imediatamente.
+        if (!state.player) {
+            onYouTubeIframeAPIReady();
+        }
+        return;
+    }
+    if (ytApiLoading) return;
+    ytApiLoading = true;
+
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    tag.onload = () => { ytApiLoaded = true; };
+    tag.onerror = () => {
+        ytApiLoading = false;
+        console.error('Falha ao carregar a API do YouTube.');
+    };
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+}
+
+loadYouTubeAPI();
 
 
 console.log('🎵 Pobrefy carregado!');
-console.log('📌 Para ativar o login com Google, configure o Client ID em script.js');
-console.log('📌 As playlists padrão são: Ana Castela, Sertanejo e Funk');
-
+console.log('📌 Login: usuário "admin" / senha "admin"');

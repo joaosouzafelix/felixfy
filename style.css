@@ -55,7 +55,7 @@ body {
 }
 
 
-.login-box, .register-box {
+.login-box {
     background: var(--bg-card);
     border-radius: 12px;
     padding: 40px 36px;
@@ -132,50 +132,11 @@ body {
 }
 
 
-.login-divider {
-    display: flex;
-    align-items: center;
-    margin: 20px 0;
-    color: var(--text-muted);
-    font-size: 12px;
-}
-
-
-.login-divider::before,
-.login-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #3a3a3a;
-}
-
-
-.login-divider span {
-    padding: 0 16px;
-}
-
-
-.btn-google {
-    width: 100%;
-    padding: 12px;
-    background: #ffffff;
-    color: #000000;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    transition: all 0.3s;
-}
-
-
-.btn-google:hover {
-    background: #f0f0f0;
-    transform: scale(1.02);
+.login-error {
+    color: #dc3545;
+    text-align: center;
+    margin-top: 12px;
+    font-size: 13px;
 }
 
 
@@ -1113,14 +1074,14 @@ footer {
 
 /* ===== PLAYER OCULTO ===== */
 #player-container {
-    position: fixed;
-    bottom: -9999px;
+    position: absolute;
+    top: 0;
     left: -9999px;
-    width: 1px;
-    height: 1px;
+    width: 640px;
+    height: 360px;
     overflow: hidden;
     pointer-events: none;
-    opacity: 0;
+    z-index: -1;
 }
 
 
@@ -1135,8 +1096,28 @@ footer {
 @media (max-width: 768px) {
     aside {
         width: 180px;
-        padding: 10ex;
-
+        padding: 16px 8px;
     }
-    
+    .playlist-detail-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .playlist-detail-header .detail-info .detail-play-all {
+        margin: 12px auto 0;
+    }
+    .lyrics-panel {
+        width: 100%;
+    }
+    footer {
+        padding: 8px 12px;
+        height: 70px;
+        flex-wrap: wrap;
+    }
+    .player-left {
+        min-width: 120px;
+    }
+    .player-right {
+        min-width: 80px;
+    }
 }
