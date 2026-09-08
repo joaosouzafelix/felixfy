@@ -26,19 +26,19 @@ const MUSIC_DATA = {
         { id: 'jGbldS066tA', title: 'Barulho da Camioneta', artist: 'Ana Castela', cover: '🚗', lyrics: 'Barulho da camioneta\nAnunciando a chegada...' }
     ],
     'sertanejo': [
-        // Músicas sertanejas (usando algumas que já existem e marcando como sertanejo)
         { id: 'BngZJ-yORWw', title: 'Ponto Fraco', artist: 'Ana Castela', cover: '🎶', genre: 'sertanejo' },
         { id: 'qTVbdTffP5k', title: 'É Que Eu Não Te Esqueci', artist: 'Ana Castela', cover: '🎤', genre: 'sertanejo' },
         { id: 'F3kqSn_BP50', title: 'Eu Não Vou Mudar', artist: 'Ana Castela', cover: '🎸', genre: 'sertanejo' },
         { id: 'tX7-EVaP_RY', title: 'Hoje Tem Rodeio', artist: 'Ana Castela', cover: '🤠', genre: 'sertanejo' },
         { id: '_fqH6zYJ3DI', title: 'Vou Vender o Meu Chapéu', artist: 'Ana Castela', cover: '🧢', genre: 'sertanejo' },
+        { id: 'nmlSLqOvPHQ', title: 'Meu Erro', artist: 'Ana Castela', cover: '💔', genre: 'sertanejo' },
+        { id: 'kTSAECb8iIc', title: 'Rodeio Acabou', artist: 'Ana Castela', cover: '🐴', genre: 'sertanejo' },
     ],
     'funk': [
-        // Músicas de funk (usando algumas que já existem e marcando como funk)
         { id: 'CKNjiHKiNvM', title: 'Agora Ou Nunca', artist: 'Ana Castela ft. Pedro Sampaio', cover: '🔥', genre: 'funk' },
+        { id: 'Jpv9iR09sjc', title: 'Mamãe, Não Deixe Seu Filho Ser um Cowboy', artist: 'Ana Castela', cover: '👩‍👦', genre: 'funk' },
     ]
 };
-
 
 // Playlists padrão
 const DEFAULT_PLAYLISTS = {
@@ -65,7 +65,6 @@ const DEFAULT_PLAYLISTS = {
     }
 };
 
-
 // ============================================================
 // ===== ESTADO DA APLICAÇÃO =====
 // ============================================================
@@ -78,9 +77,10 @@ let state = {
     playerReady: false,
     player: null,
     playlists: {},
-    queue: []
+    queue: [],
+    resetEmail: null,
+    resetCode: null
 };
-
 
 // ============================================================
 // ===== INICIALIZAÇÃO =====
@@ -88,7 +88,7 @@ let state = {
 document.addEventListener('DOMContentLoaded', () => {
     // Carregar dados do localStorage
     loadFromStorage();
-   
+    
     // Verificar se usuário está logado
     if (state.currentUser) {
         showApp();
@@ -99,11 +99,13 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         showLogin();
     }
-   
+    
     // Configurar eventos
     setupEvents();
+    
+    // Inicializar player do YouTube
+    loadYouTubeAPI();
 });
-
 
 // ============================================================
 // ===== LOCAL STORAGE =====
@@ -114,7 +116,7 @@ function loadFromStorage() {
         if (savedUser) {
             state.currentUser = JSON.parse(savedUser);
         }
-       
+        
         const savedPlaylists = localStorage.getItem('pobrefy_playlists');
         if (savedPlaylists) {
             state.playlists = JSON.parse(savedPlaylists);
@@ -127,7 +129,6 @@ function loadFromStorage() {
     }
 }
 
-
 function saveToStorage() {
     try {
         if (state.currentUser) {
@@ -139,7 +140,6 @@ function saveToStorage() {
     }
 }
 
-
 // ============================================================
 // ===== LOGIN / CADASTRO =====
 // ============================================================
@@ -148,13 +148,11 @@ function showLogin() {
     document.getElementById('app').style.display = 'none';
 }
 
-
 function showApp() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
     document.getElementById('userNameDisplay').textContent = state.currentUser?.name || 'Usuário';
 }
-
 
 function setupLoginEvents() {
     // Mostrar cadastro
@@ -162,27 +160,133 @@ function setupLoginEvents() {
         e.preventDefault();
         document.querySelector('.login-box').style.display = 'none';
         document.querySelector('.register-box').style.display = 'block';
+        document.getElementById('resetPasswordBox').style.display = 'none';
     });
-
 
     // Mostrar login
     document.getElementById('showLogin').addEventListener('click', (e) => {
         e.preventDefault();
         document.querySelector('.login-box').style.display = 'block';
         document.querySelector('.register-box').style.display = 'none';
+        document.getElementById('resetPasswordBox').style.display = 'none';
     });
 
+    // Mostrar reset de senha
+    document.getElementById('showForgotPassword').addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelector('.login-box').style.display = 'none';
+        document.querySelector('.register-box').style.display = 'none';
+        document.getElementById('resetPasswordBox').style.display = 'block';
+    });
+
+    // Voltar da tela de reset
+    document.getElementById('backToLogin').addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelector('.login-box').style.display = 'block';
+        document.querySelector('.register-box').style.display = 'none';
+        document.getElementById('resetPasswordBox').style.display = 'none';
+        document.getElementById('resetStep1').style.display = 'block';
+        document.getElementById('resetStep2').style.display = 'none';
+    });
+
+    // Solicitar código de reset
+    document.getElementById('requestResetCode').addEventListener('click', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('resetEmail').value.trim();
+        
+        if (!email) {
+            alert('Por favor, digite seu e-mail.');
+            return;
+        }
+        
+        // Verificar se o e-mail existe
+        const users = JSON.parse(localStorage.getItem('pobrefy_users') || '[]');
+        const user = users.find(u => u.email === email);
+        
+        if (!user) {
+            alert('E-mail não encontrado. Verifique se você digitou corretamente.');
+            return;
+        }
+        
+        // Gerar código de 6 dígitos
+        const code = Math.floor(100000 + Math.random() * 900000).toString();
+        state.resetEmail = email;
+        state.resetCode = code;
+        
+        // Simular envio de e-mail (na prática, você usaria um serviço como EmailJS, SendGrid, etc.)
+        console.log(`Código de verificação para ${email}: ${code}`);
+        
+        // Mostrar mensagem com o código (em produção, isso iria para o e-mail)
+        alert(`🔐 Código de verificação enviado para ${email}\n\nCódigo: ${code}\n\n(Em produção, este código seria enviado por e-mail)`);
+        
+        // Avançar para o passo 2
+        document.getElementById('resetStep1').style.display = 'none';
+        document.getElementById('resetStep2').style.display = 'block';
+        document.getElementById('resetEmailDisplay').textContent = email;
+    });
+
+    // Verificar código e resetar senha
+    document.getElementById('resetPasswordForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const code = document.getElementById('resetCodeInput').value.trim();
+        const newPassword = document.getElementById('resetNewPassword').value;
+        const confirmPassword = document.getElementById('resetConfirmPassword').value;
+        
+        // Verificar código
+        if (code !== state.resetCode) {
+            alert('Código inválido. Tente novamente.');
+            return;
+        }
+        
+        // Verificar senha
+        if (newPassword.length < 6) {
+            alert('A senha deve ter pelo menos 6 caracteres.');
+            return;
+        }
+        
+        if (newPassword !== confirmPassword) {
+            alert('As senhas não coincidem.');
+            return;
+        }
+        
+        // Atualizar senha no localStorage
+        const users = JSON.parse(localStorage.getItem('pobrefy_users') || '[]');
+        const userIndex = users.findIndex(u => u.email === state.resetEmail);
+        
+        if (userIndex !== -1) {
+            users[userIndex].password = newPassword;
+            localStorage.setItem('pobrefy_users', JSON.stringify(users));
+            
+            alert('✅ Senha alterada com sucesso! Faça login com sua nova senha.');
+            
+            // Voltar para o login
+            document.querySelector('.login-box').style.display = 'block';
+            document.querySelector('.register-box').style.display = 'none';
+            document.getElementById('resetPasswordBox').style.display = 'none';
+            document.getElementById('resetStep1').style.display = 'block';
+            document.getElementById('resetStep2').style.display = 'none';
+            
+            // Limpar campos
+            document.getElementById('resetEmail').value = '';
+            document.getElementById('resetCodeInput').value = '';
+            document.getElementById('resetNewPassword').value = '';
+            document.getElementById('resetConfirmPassword').value = '';
+            state.resetEmail = null;
+            state.resetCode = null;
+        }
+    });
 
     // Login
     document.getElementById('loginForm').addEventListener('submit', (e) => {
         e.preventDefault();
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
-       
+        
         // Verificar se o usuário existe
         const users = JSON.parse(localStorage.getItem('pobrefy_users') || '[]');
         const user = users.find(u => u.email === email && u.password === password);
-       
+        
         if (user) {
             state.currentUser = { name: user.name, email: user.email };
             saveToStorage();
@@ -196,7 +300,6 @@ function setupLoginEvents() {
         }
     });
 
-
     // Cadastro
     document.getElementById('registerForm').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -204,22 +307,27 @@ function setupLoginEvents() {
         const email = document.getElementById('registerEmail').value;
         const password = document.getElementById('registerPassword').value;
         const confirm = document.getElementById('registerConfirmPassword').value;
-       
+        
         if (password !== confirm) {
             alert('As senhas não coincidem!');
             return;
         }
-       
+        
+        if (password.length < 6) {
+            alert('A senha deve ter pelo menos 6 caracteres.');
+            return;
+        }
+        
         const users = JSON.parse(localStorage.getItem('pobrefy_users') || '[]');
-       
+        
         if (users.find(u => u.email === email)) {
             alert('Este e-mail já está cadastrado!');
             return;
         }
-       
+        
         users.push({ name, email, password });
         localStorage.setItem('pobrefy_users', JSON.stringify(users));
-       
+        
         state.currentUser = { name, email };
         saveToStorage();
         showApp();
@@ -229,7 +337,6 @@ function setupLoginEvents() {
         renderSidebar();
     });
 
-
     // Logout
     document.getElementById('logoutBtn').addEventListener('click', () => {
         state.currentUser = null;
@@ -237,8 +344,8 @@ function setupLoginEvents() {
         showLogin();
         document.querySelector('.login-box').style.display = 'block';
         document.querySelector('.register-box').style.display = 'none';
+        document.getElementById('resetPasswordBox').style.display = 'none';
     });
-
 
     // Google Login (preparado)
     document.getElementById('googleLoginBtn').addEventListener('click', () => {
@@ -252,14 +359,13 @@ function setupLoginEvents() {
     });
 }
 
-
 // ============================================================
 // ===== SAUDAÇÃO =====
 // ============================================================
 function updateGreeting() {
     const hour = new Date().getHours();
     let greeting = '';
-   
+    
     if (hour >= 5 && hour < 12) {
         greeting = 'Bom dia';
     } else if (hour >= 12 && hour < 18) {
@@ -267,12 +373,11 @@ function updateGreeting() {
     } else {
         greeting = 'Boa noite';
     }
-   
+    
     const name = state.currentUser?.name || '';
     const message = document.getElementById('greetingMessage');
     message.textContent = name ? `${greeting}, ${name}!` : `${greeting}!`;
 }
-
 
 // ============================================================
 // ===== NAVEGAÇÃO =====
@@ -281,18 +386,18 @@ function setupNavigation() {
     document.querySelectorAll('nav ul li').forEach(item => {
         item.addEventListener('click', () => {
             const page = item.dataset.page;
-           
+            
             // Atualizar menu
             document.querySelectorAll('nav ul li').forEach(li => li.classList.remove('active'));
             item.classList.add('active');
-           
+            
             // Mostrar página
             document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
             const target = document.getElementById(`page-${page}`);
             if (target) target.classList.add('active');
         });
     });
-   
+    
     // Playlists na sidebar
     document.querySelectorAll('#sidebarPlaylists li[data-playlist]').forEach(item => {
         item.addEventListener('click', () => {
@@ -300,7 +405,7 @@ function setupNavigation() {
             openPlaylist(playlistId);
         });
     });
-   
+    
     // Criar playlist
     document.querySelector('.create-playlist-btn').addEventListener('click', () => {
         const name = prompt('Nome da nova playlist:');
@@ -308,14 +413,14 @@ function setupNavigation() {
             createPlaylist(name.trim());
         }
     });
-   
+    
     // Voltar da playlist
     document.getElementById('backFromPlaylist').addEventListener('click', () => {
         document.getElementById('page-playlist').style.display = 'none';
         document.getElementById('page-home').classList.add('active');
+        document.querySelector('nav ul li[data-page="home"]').classList.add('active');
     });
 }
-
 
 // ============================================================
 // ===== PLAYLISTS =====
@@ -336,7 +441,6 @@ function createPlaylist(name) {
     renderHome();
 }
 
-
 function deletePlaylist(id) {
     if (id in DEFAULT_PLAYLISTS) {
         alert('Não é possível excluir playlists padrão!');
@@ -348,19 +452,21 @@ function deletePlaylist(id) {
         renderSidebar();
         renderLibrary();
         renderHome();
+        // Fechar detalhe se estiver aberto
+        document.getElementById('page-playlist').style.display = 'none';
+        document.getElementById('page-home').classList.add('active');
     }
 }
-
 
 function openPlaylist(id) {
     const playlist = state.playlists[id];
     if (!playlist) return;
-   
+    
     state.currentPlaylist = id;
-   
+    
     const detail = document.getElementById('playlistDetail');
     const songs = playlist.songs.map(songId => getSongById(songId)).filter(s => s);
-   
+    
     detail.innerHTML = `
         <div class="playlist-detail-header">
             <div class="detail-artwork">${playlist.cover || '🎵'}</div>
@@ -370,7 +476,7 @@ function openPlaylist(id) {
                 <p class="detail-description">${playlist.description || ''}</p>
                 <p class="detail-description">${songs.length} músicas</p>
                 ${playlist.isCustom ? `<button class="detail-delete" onclick="deletePlaylist('${id}')">🗑️ Excluir</button>` : ''}
-                <button class="detail-play-all" onclick="playPlaylist('${id}')">▶️ Reproduzir todas</button>
+                ${songs.length > 0 ? `<button class="detail-play-all" onclick="playPlaylist('${id}')">▶️ Reproduzir todas</button>` : '<p style="color: var(--text-secondary);">Adicione músicas a esta playlist</p>'}
             </div>
         </div>
         <div class="playlist-tracks">
@@ -386,24 +492,25 @@ function openPlaylist(id) {
             `).join('')}
         </div>
     `;
-   
+    
     document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
     document.getElementById('page-playlist').style.display = 'block';
 }
 
-
 function playPlaylist(id) {
     const playlist = state.playlists[id];
-    if (!playlist || !playlist.songs.length) return;
-   
+    if (!playlist || !playlist.songs.length) {
+        alert('Esta playlist não tem músicas!');
+        return;
+    }
+    
     state.queue = playlist.songs.map(songId => getSongById(songId)).filter(s => s);
     state.currentSongIndex = 0;
-   
+    
     if (state.queue.length > 0) {
         playSong(state.queue[0].id, id);
     }
 }
-
 
 function getSongById(id) {
     for (const playlist of Object.values(MUSIC_DATA)) {
@@ -414,7 +521,6 @@ function getSongById(id) {
     return null;
 }
 
-
 function getAllSongs() {
     const all = [];
     for (const playlist of Object.values(MUSIC_DATA)) {
@@ -422,7 +528,6 @@ function getAllSongs() {
     }
     return all;
 }
-
 
 // ============================================================
 // ===== PLAYER =====
@@ -432,7 +537,7 @@ function setupPlayer() {
     document.getElementById('playBtn').addEventListener('click', togglePlay);
     document.getElementById('prevBtn').addEventListener('click', prevSong);
     document.getElementById('nextBtn').addEventListener('click', nextSong);
-   
+    
     // Barra de progresso
     document.querySelector('.progress-bar').addEventListener('click', (e) => {
         if (!state.player || !state.playerReady) return;
@@ -443,7 +548,7 @@ function setupPlayer() {
             state.player.seekTo(percent * duration, true);
         }
     });
-   
+    
     // Volume
     document.querySelector('.volume-bar').addEventListener('click', (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -453,7 +558,7 @@ function setupPlayer() {
             state.player.setVolume(percent);
         }
     });
-   
+    
     // Letras
     document.getElementById('toggleLyrics').addEventListener('click', toggleLyrics);
     document.getElementById('closeLyrics').addEventListener('click', () => {
@@ -461,32 +566,48 @@ function setupPlayer() {
     });
 }
 
-
 function playSong(songId, playlistId) {
     const song = getSongById(songId);
-    if (!song) return;
-   
+    if (!song) {
+        console.error('Música não encontrada:', songId);
+        return;
+    }
+    
     state.currentSongId = songId;
     state.currentPlaylist = playlistId || state.currentPlaylist;
-   
+    
     // Atualizar UI
     document.getElementById('playerSong').textContent = song.title;
     document.getElementById('playerArtist').textContent = song.artist || 'Desconhecido';
     document.getElementById('playerArtwork').innerHTML = song.cover || '🎵';
-   
+    
     // Tocar no YouTube
     if (state.player && state.playerReady) {
-        state.player.loadVideoById(songId);
-        state.player.playVideo();
-        state.isPlaying = true;
-        document.getElementById('playBtn').textContent = '⏸';
-        document.getElementById('playBtn').title = 'Pausar';
+        try {
+            state.player.loadVideoById(songId);
+            state.player.playVideo();
+            state.isPlaying = true;
+            document.getElementById('playBtn').textContent = '⏸';
+            document.getElementById('playBtn').title = 'Pausar';
+        } catch (e) {
+            console.error('Erro ao tocar música:', e);
+            alert('Erro ao tocar a música. Tente novamente.');
+        }
+    } else {
+        console.warn('Player não está pronto. Tentando novamente em 1 segundo...');
+        // Tentar novamente após um tempo
+        setTimeout(() => {
+            if (state.player && state.playerReady) {
+                playSong(songId, playlistId);
+            } else {
+                alert('Player do YouTube não carregou. Verifique sua conexão com a internet.');
+            }
+        }, 1000);
     }
-   
+    
     // Atualizar letras
     updateLyrics(song);
 }
-
 
 function togglePlay() {
     if (!state.player || !state.playerReady) {
@@ -495,20 +616,27 @@ function togglePlay() {
         if (firstSong) playSong(firstSong.id);
         return;
     }
-   
+    
     if (state.isPlaying) {
-        state.player.pauseVideo();
-        state.isPlaying = false;
-        document.getElementById('playBtn').textContent = '▶️';
-        document.getElementById('playBtn').title = 'Tocar';
+        try {
+            state.player.pauseVideo();
+            state.isPlaying = false;
+            document.getElementById('playBtn').textContent = '▶️';
+            document.getElementById('playBtn').title = 'Tocar';
+        } catch (e) {
+            console.error('Erro ao pausar:', e);
+        }
     } else {
-        state.player.playVideo();
-        state.isPlaying = true;
-        document.getElementById('playBtn').textContent = '⏸';
-        document.getElementById('playBtn').title = 'Pausar';
+        try {
+            state.player.playVideo();
+            state.isPlaying = true;
+            document.getElementById('playBtn').textContent = '⏸';
+            document.getElementById('playBtn').title = 'Pausar';
+        } catch (e) {
+            console.error('Erro ao reproduzir:', e);
+        }
     }
 }
-
 
 function nextSong() {
     if (!state.currentPlaylist) {
@@ -519,10 +647,10 @@ function nextSong() {
         }
         return;
     }
-   
+    
     const playlist = state.playlists[state.currentPlaylist];
-    if (!playlist) return;
-   
+    if (!playlist || !playlist.songs.length) return;
+    
     const currentIndex = playlist.songs.findIndex(id => id === state.currentSongId);
     if (currentIndex < playlist.songs.length - 1) {
         playSong(playlist.songs[currentIndex + 1].id, state.currentPlaylist);
@@ -530,7 +658,6 @@ function nextSong() {
         playSong(playlist.songs[0].id, state.currentPlaylist);
     }
 }
-
 
 function prevSong() {
     if (!state.currentPlaylist) {
@@ -541,10 +668,10 @@ function prevSong() {
         }
         return;
     }
-   
+    
     const playlist = state.playlists[state.currentPlaylist];
-    if (!playlist) return;
-   
+    if (!playlist || !playlist.songs.length) return;
+    
     const currentIndex = playlist.songs.findIndex(id => id === state.currentSongId);
     if (currentIndex > 0) {
         playSong(playlist.songs[currentIndex - 1].id, state.currentPlaylist);
@@ -552,7 +679,6 @@ function prevSong() {
         playSong(playlist.songs[playlist.songs.length - 1].id, state.currentPlaylist);
     }
 }
-
 
 // ============================================================
 // ===== LETRAS =====
@@ -562,13 +688,12 @@ function toggleLyrics() {
     panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
 }
 
-
 function updateLyrics(song) {
     const title = document.getElementById('lyricsTitle');
     const content = document.getElementById('lyricsContent');
-   
+    
     title.textContent = `${song.title} - ${song.artist || 'Desconhecido'}`;
-   
+    
     if (song.lyrics) {
         content.innerHTML = `<pre>${song.lyrics}</pre>`;
     } else {
@@ -576,38 +701,65 @@ function updateLyrics(song) {
     }
 }
 
-
 // ============================================================
 // ===== YOUTUBE PLAYER =====
 // ============================================================
-function onYouTubeIframeAPIReady() {
-    state.player = new YT.Player('player', {
-        height: '1',
-        width: '1',
-        playerVars: {
-            'autoplay': 0,
-            'controls': 0,
-            'disablekb': 1,
-            'modestbranding': 1,
-            'rel': 0,
-            'showinfo': 0,
-            'iv_load_policy': 3,
-            'fs': 0
-        },
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange,
-            'onError': onPlayerError
-        }
-    });
+function loadYouTubeAPI() {
+    // Verificar se a API já está carregada
+    if (window.YT && window.YT.Player) {
+        console.log('YouTube API já carregada');
+        createPlayer();
+        return;
+    }
+    
+    // Criar script para carregar a API
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    
+    // A função onYouTubeIframeAPIReady será chamada pela API quando carregar
+    window.onYouTubeIframeAPIReady = function() {
+        console.log('YouTube API carregada!');
+        createPlayer();
+    };
 }
 
+function createPlayer() {
+    if (document.getElementById('player').innerHTML === '') {
+        state.player = new YT.Player('player', {
+            height: '1',
+            width: '1',
+            playerVars: {
+                'autoplay': 0,
+                'controls': 0,
+                'disablekb': 1,
+                'modestbranding': 1,
+                'rel': 0,
+                'showinfo': 0,
+                'iv_load_policy': 3,
+                'fs': 0
+            },
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange,
+                'onError': onPlayerError
+            }
+        });
+    }
+}
 
 function onPlayerReady(event) {
     state.playerReady = true;
     console.log('Player pronto!');
+    // Tentar tocar a primeira música se não houver nada tocando
+    if (!state.currentSongId) {
+        const firstSong = getAllSongs()[0];
+        if (firstSong) {
+            playSong(firstSong.id);
+        }
+    }
 }
-
 
 function onPlayerStateChange(event) {
     if (event.data === YT.PlayerState.PLAYING) {
@@ -624,202 +776,34 @@ function onPlayerStateChange(event) {
         document.getElementById('playBtn').textContent = '▶️';
         document.getElementById('playBtn').title = 'Tocar';
         nextSong();
+    } else if (event.data === YT.PlayerState.UNSTARTED) {
+        // Player carregado mas não iniciado
+        console.log('Player não iniciado');
     }
 }
 
-
 function onPlayerError(event) {
-    console.error('Erro no player:', event.data);
+    console.error('Erro no player do YouTube:', event.data);
+    // Tenta recarregar se houver erro
+    if (state.currentSongId) {
+        setTimeout(() => {
+            if (state.player && state.playerReady) {
+                try {
+                    state.player.loadVideoById(state.currentSongId);
+                } catch (e) {
+                    console.error('Erro ao recarregar vídeo:', e);
+                }
+            }
+        }, 2000);
+    }
 }
-
 
 function updateProgress() {
     if (state.player && state.playerReady && state.player.getCurrentTime) {
-        const duration = state.player.getDuration();
-        const currentTime = state.player.getCurrentTime();
-       
-        if (duration > 0) {
-            const progress = (currentTime / duration) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-            document.getElementById('currentTime').textContent = formatTime(currentTime);
-            document.getElementById('totalTime').textContent = formatTime(duration);
-        }
-    }
-    requestAnimationFrame(updateProgress);
-}
-
-
-function formatTime(seconds) {
-    if (!seconds || isNaN(seconds)) return '0:00';
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60);
-    return `${min}:${sec.toString().padStart(2, '0')}`;
-}
-
-
-// ============================================================
-// ===== RENDERIZAÇÃO =====
-// ============================================================
-function renderHome() {
-    const container = document.getElementById('homePlaylists');
-    const playlists = [
-        { id: 'ana-castela', name: 'Ana Castela', cover: '🎤', description: `${MUSIC_DATA['ana-castela'].length} músicas` },
-        { id: 'sertanejo', name: 'Sertanejo', cover: '🎸', description: `${MUSIC_DATA['sertanejo'].length} músicas` },
-        { id: 'funk', name: 'Funk', cover: '🎧', description: `${MUSIC_DATA['funk'].length} músicas` }
-    ];
-   
-    // Adicionar playlists do usuário
-    for (const [id, playlist] of Object.entries(state.playlists)) {
-        if (playlist.isCustom && !playlists.find(p => p.id === id)) {
-            playlists.push({
-                id: id,
-                name: playlist.name,
-                cover: playlist.cover || '📋',
-                description: `${playlist.songs.length} músicas`,
-                isCustom: true
-            });
-        }
-    }
-   
-    container.innerHTML = playlists.map(p => `
-        <div class="playlist-card" onclick="openPlaylist('${p.id}')">
-            <div class="card-artwork">${p.cover || '🎵'}</div>
-            <h3>${p.name}</h3>
-            <p>${p.description || ''}</p>
-            ${p.isCustom ? '<span style="font-size:11px;color:#6a6a6a;">📝 Personalizada</span>' : ''}
-            <button class="play-btn-card" onclick="event.stopPropagation(); playPlaylist('${p.id}')">▶️ Reproduzir</button>
-        </div>
-    `).join('');
-}
-
-
-function renderLibrary() {
-    const container = document.getElementById('libraryPlaylists');
-    const playlists = Object.entries(state.playlists).map(([id, playlist]) => ({
-        id,
-        ...playlist
-    }));
-   
-    container.innerHTML = playlists.map(p => `
-        <div class="playlist-card" onclick="openPlaylist('${p.id}')">
-            <div class="card-artwork">${p.cover || '🎵'}</div>
-            <h3>${p.name}</h3>
-            <p>${p.songs?.length || 0} músicas</p>
-            ${p.isCustom ? '<span style="font-size:11px;color:#6a6a6a;">📝 Personalizada</span>' : ''}
-        </div>
-    `).join('');
-}
-
-
-function renderSidebar() {
-    const container = document.getElementById('sidebarPlaylists');
-    const playlists = Object.entries(state.playlists).map(([id, playlist]) => ({
-        id,
-        ...playlist
-    }));
-   
-    // Manter os itens existentes e adicionar as playlists
-    let html = `
-        <li data-playlist="ana-castela">🎤 Ana Castela</li>
-        <li data-playlist="sertanejo">🎸 Sertanejo</li>
-        <li data-playlist="funk">🎧 Funk</li>
-    `;
-   
-    // Adicionar playlists personalizadas
-    for (const p of playlists) {
-        if (p.isCustom) {
-            html += `<li data-playlist="${p.id}">📋 ${p.name}</li>`;
-        }
-    }
-   
-    html += `<li class="create-playlist-btn">➕ Criar playlist</li>`;
-    container.innerHTML = html;
-   
-    // Reatribuir eventos
-    container.querySelectorAll('li[data-playlist]').forEach(item => {
-        item.addEventListener('click', () => {
-            openPlaylist(item.dataset.playlist);
-        });
-    });
-   
-    container.querySelector('.create-playlist-btn').addEventListener('click', () => {
-        const name = prompt('Nome da nova playlist:');
-        if (name && name.trim()) {
-            createPlaylist(name.trim());
-        }
-    });
-}
-
-
-// ============================================================
-// ===== PESQUISA =====
-// ============================================================
-function setupSearch() {
-    const input = document.getElementById('searchInput');
-    const clearBtn = document.getElementById('clearSearch');
-    const results = document.getElementById('searchResults');
-   
-    input.addEventListener('input', () => {
-        const query = input.value.trim().toLowerCase();
-        clearBtn.classList.toggle('visible', query.length > 0);
-       
-        if (query.length === 0) {
-            results.innerHTML = '';
-            return;
-        }
-       
-        const allSongs = getAllSongs();
-        const filtered = allSongs.filter(song =>
-            song.title.toLowerCase().includes(query) ||
-            (song.artist && song.artist.toLowerCase().includes(query))
-        );
-       
-        if (filtered.length === 0) {
-            results.innerHTML = '<div class="no-results">🎵 Nenhuma música encontrada</div>';
-            return;
-        }
-       
-        results.innerHTML = filtered.map(song => `
-            <div class="search-result-item" onclick="playSong('${song.id}')">
-                <div class="result-artwork">${song.cover || '🎵'}</div>
-                <div class="result-info">
-                    <div class="result-title">${song.title}</div>
-                    <div class="result-artist">${song.artist || 'Desconhecido'}</div>
-                </div>
-                <button class="result-play" onclick="event.stopPropagation(); playSong('${song.id}')">▶️</button>
-            </div>
-        `).join('');
-    });
-   
-    clearBtn.addEventListener('click', () => {
-        input.value = '';
-        input.dispatchEvent(new Event('input'));
-        input.focus();
-    });
-}
-
-
-// ============================================================
-// ===== CONFIGURAÇÃO DE EVENTOS =====
-// ============================================================
-function setupEvents() {
-    setupLoginEvents();
-    setupNavigation();
-    setupPlayer();
-    setupSearch();
-}
-
-
-// ============================================================
-// ===== CARREGAR API DO YOUTUBE =====
-// ============================================================
-const tag = document.createElement('script');
-tag.src = 'https://www.youtube.com/iframe_api';
-const firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-
-console.log('🎵 Pobrefy carregado!');
-console.log('📌 Para ativar o login com Google, configure o Client ID em script.js');
-console.log('📌 As playlists padrão são: Ana Castela, Sertanejo e Funk');
-
+        try {
+            const duration = state.player.getDuration();
+            const currentTime = state.player.getCurrentTime();
+            
+            if (duration > 0 && !isNaN(duration) && !isNaN(currentTime)) {
+                const progress = (currentTime / duration) * 100;
+                document.getElementById('progressFill').style.width = progress + '%
