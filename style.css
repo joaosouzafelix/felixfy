@@ -18,7 +18,7 @@
     --green-primary: #1ed760;
     --green-hover: #1fdf64;
     --border-color: #282828;
-    --shadow: 0 8px 24px rgba(0,0,0,0.5);
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 
@@ -55,7 +55,8 @@ body {
 }
 
 
-.login-box, .register-box {
+.login-box,
+.register-box {
     background: var(--bg-card);
     border-radius: 12px;
     padding: 40px 36px;
@@ -994,7 +995,7 @@ footer {
     height: 12px;
     background: var(--text-primary);
     border-radius: 50%;
-    box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 }
 
 
@@ -1059,8 +1060,13 @@ footer {
 
 
 @keyframes slideIn {
-    from { transform: translateX(100%); }
-    to { transform: translateX(0); }
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
 }
 
 
@@ -1135,5 +1141,8 @@ footer {
 @media (max-width: 768px) {
     aside {
         width: 180px;
-        padding:
+        padding:10px;
 
+
+    }
+}
